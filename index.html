@@ -1,0 +1,1401 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mentink op maat · Boekhouding voor ZZP'ers en MKB</title>
+<meta name="description" content="Mentink op maat verzorgt jouw administratie, BTW-aangifte en boekhouding. Vaste maandprijs vanaf €50, of per uur. Voor ZZP'ers en kleine ondernemers in Nederland." />
+<link rel="icon" type="image/png" href="assets/logo-light.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          /* whiter cream palette — was #F8F5EC / #F0E8D7 */
+          cream: '#FBF9F2',
+          cream2: '#F4EEDE',
+          ink: '#17140F',
+          ink2: '#3A332A',
+          mute: '#7A6F5E',
+          orange: '#CC4A1D',
+          orangeDeep: '#A83A15',
+          forest: '#254634',
+          forestDeep: '#15291F',
+          /* logo green for status / availability indicators */
+          logoGreen: '#1E5A38',
+          rule: '#E5DCC4',
+        },
+        fontFamily: {
+          display: ['Inter Tight', 'ui-sans-serif', 'system-ui'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  :root {
+    --grain-opacity: 0.03;
+    --c-cream: #FBF9F2;
+    --c-cream2: #F4EEDE;
+    --c-ink: #17140F;
+    --c-orange: #CC4A1D;
+    --c-rule: #E5DCC4;
+    /* unified motion tokens — keeps every transition on the same curve so
+       hover/press/reveal feel like the same hand. */
+    --ease-out: cubic-bezier(.22,1,.36,1);   /* quick start, soft tail */
+    --ease-in-out: cubic-bezier(.65,0,.35,1);
+    --dur-fast: 180ms;
+    --dur-base: 280ms;
+    --dur-slow: 420ms;
+  }
+  /* ---------- LENIS smooth-scroll baseline ---------- */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  .lenis.lenis-smooth iframe { pointer-events: none; }
+
+  body {
+    background: var(--c-cream);
+    color: var(--c-ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* cv11 single-storey g, ss01 stylistic set, calt contextual ligatures,
+       kern proper kerning, liga common ligatures. tnum is applied selectively
+       to numerics that need column-alignment via .num-tab below. */
+    font-feature-settings: 'cv11', 'ss01', 'calt', 'kern', 'liga';
+  }
+  .font-display { font-family: 'Inter Tight', system-ui, sans-serif; letter-spacing: -0.025em; font-feature-settings: 'cv11', 'ss01', 'calt', 'kern', 'liga'; }
+  .font-mono   { font-family: 'JetBrains Mono', monospace; font-variant-ligatures: none; }
+  /* Tabular numerals — apply to prices, phone numbers, and any column-aligned
+     digits so '€50' / '€75' / '€100' line up on the decimal. */
+  .num-tab { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+
+  /* Header (absolute overlay) — contains both announcement strip + nav row.
+     Hero stays exactly 100svh; header floats on top, scrolls away with the page. */
+  .site-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: transparent;
+  }
+  /* Announcement strip lives INSIDE the header, in normal flow above the nav row */
+  .announcement-bar {
+    background: var(--c-ink);
+    color: var(--c-cream);
+  }
+  /* Hero gets enough headroom so the headline doesn't sit under the header.
+     Combined header is roughly 36 (announcement) + 70 (nav) ≈ 106px on desktop.
+     Tightened on small viewports so headline+CTA fit inside 100svh without
+     getting clipped by scroll-snap. */
+  .hero-section { padding-top: clamp(96px, 11vh, 150px); }
+
+  /* ---------- .snap-pane — every snap section becomes a perfectly-centred 100svh viewport ----------
+     Hero already uses flex+justify-center inside .hero-section. For werkwijze/
+     tarieven/contact the content was shorter than the viewport, so the next
+     section was bleeding in from below. Forcing min-height: 100svh + flex
+     center fixes that complaint. .diensten-section overrides min-height to
+     100svh as well; padding is trimmed elsewhere so 4 services fit. */
+  .snap-pane {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* subtle paper grain (lighter on whiter bg) */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.09  0 0 0 0 0.08  0 0 0 0 0.06  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: var(--grain-opacity);
+    mix-blend-mode: multiply;
+  }
+
+  /* ---------- HERO gradient blob ---------- */
+  .gradient-blob {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .gradient-blob::before,
+  .gradient-blob::after {
+    content: ""; position: absolute;
+    border-radius: 999px;
+    filter: blur(90px);
+  }
+  .gradient-blob::before {
+    width: 760px; height: 760px;
+    top: -180px; right: -120px;
+    background: radial-gradient(circle, rgba(204,74,29,0.20), transparent 70%);
+    opacity: 0.85;
+  }
+  .gradient-blob::after {
+    width: 560px; height: 560px;
+    top: 220px; left: -100px;
+    background: radial-gradient(circle, rgba(30,90,56,0.13), transparent 70%);
+    opacity: 0.8;
+  }
+
+  /* rule lines */
+  .rule-top    { border-top: 1px solid var(--c-rule); }
+  .rule-bottom { border-bottom: 1px solid var(--c-rule); }
+
+  /* big headline — display weight 600 puts it above service h3 (also 600)
+     in scale; tracking is tight enough that 600 still feels modern, not heavy */
+  .display-huge {
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    line-height: 0.94;
+    /* opt-in features specifically for the giant display headline. ss01
+       rounds Inter Tight's terminals; cv11 single-storey g pairs with the
+       italic swash 'op maat' below it. */
+    font-feature-settings: 'cv11', 'ss01', 'calt', 'kern', 'liga';
+    /* Use modern OpenType 'palt' if available (proportional alternate
+       widths) to tighten the punctuation; harmless if unsupported. */
+  }
+
+  .italic-swash {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--c-orange);
+    /* ss01 + cv11 give Inter Tight italic a slightly more characterful 'a' / 'g'
+       glyph that pairs better with the Bebas-adjacent display weight. */
+    font-feature-settings: 'ss01', 'cv11', 'calt', 'kern';
+    letter-spacing: -0.03em; /* tighter than display body — italics need it */
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #7A6F5E;
+  }
+
+  /* ---------- BUTTONS — 32px Mercury pills ---------- */
+  .btn-primary {
+    background: var(--c-ink);
+    color: var(--c-cream);
+    padding: 14px 22px;
+    border-radius: 32px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      background var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 16px -8px rgba(23,20,15,0.30);
+  }
+  .btn-primary:hover {
+    background: var(--c-orange);
+    transform: translateY(-1px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.10) inset, 0 10px 22px -8px rgba(204,74,29,0.35);
+  }
+  .btn-primary:active { transform: translateY(0); transition-duration: var(--dur-fast); }
+  .btn-ghost {
+    color: var(--c-ink);
+    padding: 14px 18px;
+    border-radius: 32px;
+    font-weight: 500;
+    border: 1px solid var(--c-ink);
+    display: inline-flex; align-items: center; gap: 10px;
+    transition:
+      background var(--dur-base) var(--ease-out),
+      color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+  .btn-ghost:hover { background: var(--c-ink); color: var(--c-cream); border-color: var(--c-ink); transform: translateY(-1px); }
+  .btn-ghost:active { transform: translateY(0); transition-duration: var(--dur-fast); }
+
+  /* ---------- NAV PILLS (eyecatching tasteful) ---------- */
+  .nav-pill {
+    position: relative;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3A332A;
+    transition: color .25s, background .25s;
+  }
+  .nav-pill::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: 999px;
+    background: var(--c-ink);
+    transform: scale(0.6);
+    opacity: 0;
+    transition: transform .35s cubic-bezier(.22,1,.36,1), opacity .25s;
+    z-index: -1;
+  }
+  .nav-pill:hover { color: var(--c-cream); }
+  .nav-pill:hover::before { transform: scale(1); opacity: 1; }
+  .nav-pill.is-active {
+    color: var(--c-cream);
+  }
+  .nav-pill.is-active::before {
+    background: var(--c-orange);
+    transform: scale(1); opacity: 1;
+  }
+
+  /* ---------- ANNOUNCEMENT BAR ---------- */
+  .announcement-bar { background: var(--c-ink); color: var(--c-cream); }
+
+  /* ---------- STATUS PILL (Hyperstudio "spots-left") ---------- */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #1E5A38; color: var(--c-cream);
+    padding: 6px 14px; border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .status-pill .dot {
+    width: 6px; height: 6px;
+    background: #4ADE80; border-radius: 999px;
+    box-shadow: 0 0 0 0 rgba(74,222,128,0.7);
+    /* slower, gentler breath — easeInOut so the ring fades in/out symmetrically.
+       Old config used .66,0,0,1 which snapped hard at the start; this site is
+       calm so a calm pulse fits the tone. */
+    animation: pulse 3s cubic-bezier(.4,0,.2,1) infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.55); }
+    60%  { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
+    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+  }
+
+  /* ---------- GLASS CARD (Superhuman floating panel) ---------- */
+  .glass-card {
+    background: rgba(251,249,242,0.62);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.65);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 12px 32px -10px rgba(23,20,15,0.10);
+    border-radius: 28px;
+    padding: 16px 18px;
+  }
+  /* on dark bg variant */
+  .glass-card-dark {
+    background: rgba(23,20,15,0.32);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 12px 32px -10px rgba(0,0,0,0.4);
+    border-radius: 28px;
+    color: var(--c-cream);
+  }
+
+  /* ---------- PHOTO PLACEHOLDER ---------- */
+  .photo-slot-wrap { position: relative; }
+  .photo-slot-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--c-ink);
+    opacity: 0.55;
+    margin-bottom: 10px;
+    padding-left: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .photo-slot-caption::before {
+    content: ""; width: 18px; height: 1px; background: currentColor;
+  }
+  .photo-slot {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 28px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 80% at 30% 20%, rgba(204,74,29,0.10), transparent 55%),
+      linear-gradient(170deg, #F1E7CF 0%, #E2D4B2 60%, #C9B98F 100%);
+    border: 1px solid rgba(23,20,15,0.06);
+  }
+  .photo-slot::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8'><circle cx='1' cy='1' r='0.6' fill='%2317140F' opacity='0.06'/></svg>");
+  }
+  .photo-slot__art {
+    position: absolute;
+    inset: 8% 14% 0 14%;
+    color: var(--c-ink);
+    opacity: 0.32;
+  }
+
+  /* ---------- HERO — full viewport (mobile-safe with svh) ---------- */
+  .hero-section {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ---------- DIENSTEN — cinematic full-bleed bg + dark overlay ---------- */
+  .diensten-section {
+    position: relative;
+    min-height: 100svh;
+    color: var(--c-cream);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .diensten-bg {
+    position: absolute; inset: 0;
+    background-image: url('assets/cinematic-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll; /* fixed causes mobile issues */
+    z-index: -2;
+  }
+  .diensten-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(23,20,15,0.88) 0%, rgba(23,20,15,0.70) 30%, rgba(23,20,15,0.70) 70%, rgba(23,20,15,0.92) 100%),
+      radial-gradient(120% 80% at 70% 30%, rgba(204,74,29,0.10), transparent 60%);
+    z-index: -1;
+  }
+  .diensten-section .eyebrow { color: rgba(251,249,242,0.55); }
+  .diensten-section .text-mute { color: rgba(251,249,242,0.55); }
+  .diensten-section .text-ink2 { color: rgba(251,249,242,0.85); }
+  .diensten-section .rule-top  { border-top-color: rgba(251,249,242,0.18); }
+  .diensten-section .rule-bottom { border-bottom-color: rgba(251,249,242,0.18); }
+  .diensten-section .svc-arrow { border-color: rgba(251,249,242,0.55); color: var(--c-cream); }
+
+  /* service card hover (works on dark bg) */
+  .svc-card {
+    transition: background .35s cubic-bezier(.22,1,.36,1), color .35s;
+    position: relative; overflow: hidden;
+  }
+  .svc-card::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(600px 200px at var(--mx,50%) var(--my,0%), rgba(204,74,29,0.22), transparent 60%);
+    opacity: 0; transition: opacity .3s; pointer-events: none;
+  }
+  .svc-card:hover::after { opacity: 1; }
+  .svc-card:hover .svc-arrow { transform: translate(4px,-4px); border-color: var(--c-orange); color: var(--c-orange); }
+  .svc-arrow { transition: transform .3s, color .3s, border-color .3s; }
+
+  /* ---------- PRICING — glassmorphic ---------- */
+  .price-card {
+    background: rgba(251,249,242,0.55);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.6);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 14px 36px -12px rgba(23,20,15,0.10);
+  }
+  .price-card-featured {
+    background: rgba(23,20,15,0.92);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: var(--c-cream);
+    box-shadow: 0 14px 36px -12px rgba(23,20,15,0.30);
+  }
+  .price-card-featured .price-rule { border-color: #3A332A; }
+  .price-card-featured .price-accent { color: #E9A76A; }
+
+  /* per-uur strip — also glass */
+  .perhour-strip {
+    background: rgba(251,249,242,0.40);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset;
+  }
+
+  /* ---------- FAQ ---------- */
+  details summary { list-style: none; cursor: pointer; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary { transition: opacity var(--dur-base) var(--ease-out); }
+  details summary:hover { opacity: 0.72; }
+  details[open] .faq-plus::before { transform: rotate(90deg); }
+  details[open] .faq-plus { transform: rotate(45deg) scale(1.05); }
+  .faq-plus {
+    width: 14px; height: 14px; position: relative; display: inline-block;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .faq-plus::before, .faq-plus::after {
+    content: ""; position: absolute; inset: 0;
+    background: var(--c-ink); transition: transform var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out);
+  }
+  .faq-plus::before { width: 2px; left: 6px; }
+  .faq-plus::after { height: 2px; top: 6px; }
+  details[open] .faq-plus::before,
+  details[open] .faq-plus::after { background: var(--c-orange); }
+
+  /* reveal-on-load stagger */
+  .reveal { opacity: 0; transform: translateY(18px); animation: reveal .9s cubic-bezier(.22,1,.36,1) forwards; }
+  @keyframes reveal { to { opacity: 1; transform: none; } }
+
+  .float-a { animation: floatA 6s ease-in-out infinite; }
+  .float-b { animation: floatB 7s ease-in-out infinite; }
+  @keyframes floatA { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes floatB { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+  .scroll-reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+  }
+  .scroll-reveal.in { opacity: 1; transform: none; }
+
+  /* marquee (hidden trust strip ready) */
+  .marquee { overflow: hidden; }
+  .marquee-track { display: flex; gap: 3rem; width: max-content; animation: marquee 40s linear infinite; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  :focus-visible { outline: 2px solid var(--c-orange); outline-offset: 3px; border-radius: 4px; }
+  /* on dark sections, lighten the focus ring offset shadow so the orange
+     ring still reads cleanly against the dark canvas */
+  [data-theme="dark"] :focus-visible { outline-color: #E9A76A; }
+
+  /* Symmetrical underline animation — the line sweeps OUT to the right and
+     a fresh line sweeps IN from the left. Feels intentional, not just
+     "shrinking". Uses a single gradient with two background layers. */
+  .link-under {
+    background-image:
+      linear-gradient(var(--c-ink), var(--c-ink)),
+      linear-gradient(var(--c-ink), var(--c-ink));
+    background-repeat: no-repeat;
+    background-size: 0% 1px, 100% 1px;
+    background-position: 100% 100%, 0 100%;
+    transition: background-size var(--dur-slow) var(--ease-out);
+  }
+  .link-under:hover {
+    background-size: 100% 1px, 0% 1px;
+    background-position: 0 100%, 100% 100%;
+  }
+
+  ::selection { background: var(--c-orange); color: var(--c-cream); }
+
+  .logo-mark {
+    width: 36px; height: 36px;
+    object-fit: contain;
+    object-position: center;
+    display: inline-block;
+  }
+
+  /* ---------- SCROLL DOTS (compact pill, no text) ----------
+     Fixed-width pill so the layout never shifts. Each dot scales slightly
+     on hover; active dot grows + turns orange with a soft halo. Labels are
+     visually hidden but kept in DOM for screen readers (sr-only).
+  ---------------------------------------------------------------------- */
+  .scroll-dots {
+    position: fixed;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    pointer-events: auto;
+  }
+  @media (min-width: 768px) {
+    .scroll-dots { right: 22px; }
+  }
+  /* Collapsed-by-default: just dots, no pill. Pill expands on
+     :hover (desktop), :focus-within (keyboard), .is-touched (JS-toggled
+     on touch). Auto-collapses 2.5s after last touchstart. */
+  .scroll-dots ul {
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 6px 4px;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    transition: gap .35s cubic-bezier(.22,1,.36,1),
+                padding .35s cubic-bezier(.22,1,.36,1),
+                background .3s ease,
+                backdrop-filter .3s ease,
+                -webkit-backdrop-filter .3s ease,
+                border-color .3s ease,
+                box-shadow .3s ease;
+  }
+  .scroll-dots li {
+    display: flex; justify-content: center;
+    width: 100%;
+  }
+  .scroll-dots a {
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;     /* WCAG 2.2 AA min target — was 22x14 */
+    position: relative;
+  }
+  .scroll-dots .dot {
+    width: 5px; height: 5px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(23,20,15,0.40);
+    background: transparent;
+    transition: width .35s cubic-bezier(.22,1,.36,1),
+                height .35s cubic-bezier(.22,1,.36,1),
+                transform .35s cubic-bezier(.22,1,.36,1),
+                border-color .25s, background .25s, box-shadow .35s;
+  }
+
+  /* Expanded state — full pill + bigger dots */
+  .scroll-dots:hover ul,
+  .scroll-dots:focus-within ul,
+  .scroll-dots.is-touched ul {
+    gap: 14px;
+    padding: 14px 4px;
+    background: rgba(251,249,242,0.62);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    backdrop-filter: blur(14px) saturate(150%);
+    border-color: rgba(229,220,196,0.7);
+    box-shadow: 0 8px 24px -8px rgba(23,20,15,0.10);
+  }
+  .scroll-dots:hover .dot,
+  .scroll-dots:focus-within .dot,
+  .scroll-dots.is-touched .dot {
+    width: 7px; height: 7px;
+  }
+
+  .scroll-dots a:hover .dot {
+    transform: scale(1.35);
+    border-color: var(--c-ink);
+    background: rgba(23,20,15,0.06);
+  }
+  .scroll-dots a.is-active .dot {
+    background: var(--c-orange);
+    border-color: var(--c-orange);
+    transform: scale(1.45);
+    /* layered halo: tight inner ring + softer outer bloom for a Mercury-style
+       active state. Replaces the single hard 4px shadow. */
+    box-shadow:
+      0 0 0 3px rgba(204,74,29,0.16),
+      0 0 8px 0 rgba(204,74,29,0.35);
+  }
+  /* labels kept for a11y, visually hidden */
+  .scroll-dots .label {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+
+  /* dots variant when over a dark-themed section */
+  .scroll-dots.is-dark .dot { border-color: rgba(251,249,242,0.5); }
+  .scroll-dots.is-dark:hover ul,
+  .scroll-dots.is-dark:focus-within ul,
+  .scroll-dots.is-dark.is-touched ul {
+    background: rgba(23,20,15,0.50);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .scroll-dots.is-dark a:hover .dot { border-color: var(--c-cream); background: rgba(251,249,242,0.10); }
+
+  @media (max-width: 767px) {
+    .scroll-dots ul { gap: 7px; padding: 4px 4px; }
+    .scroll-dots a { width: 24px; height: 24px; } /* WCAG 2.2 AA min target */
+    .scroll-dots .dot { width: 4px; height: 4px; }
+    .scroll-dots:hover ul,
+    .scroll-dots:focus-within ul,
+    .scroll-dots.is-touched ul {
+      gap: 11px;
+      padding: 11px 4px;
+    }
+    .scroll-dots:hover .dot,
+    .scroll-dots:focus-within .dot,
+    .scroll-dots.is-touched .dot {
+      width: 6px; height: 6px;
+    }
+  }
+
+  /* Mobile-compact pricing: shrink buttons + per-hour-strip CTAs so the
+     whole tarieven section + heading still fits inside 100svh on phone. */
+  @media (max-width: 767px) {
+    .price-card .btn-ghost,
+    .price-card-featured > a:last-child,
+    .perhour-strip .btn-primary {
+      padding: 8px 14px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal, .scroll-reveal, .float-a, .float-b { opacity: 1 !important; transform: none !important; }
+    .status-pill .dot { animation: none; }
+  }
+</style>
+</head>
+<body class="relative">
+
+<!-- ============ HEADER (announcement + nav combined; absolute overlay over hero) ============ -->
+<header class="site-header" id="site-header">
+  <!-- Announcement strip: thin ink bar at the top of the header -->
+  <div class="announcement-bar">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-2 flex items-center justify-center gap-3 text-[13px]">
+      <span class="font-mono tracking-widest uppercase text-cream/55 text-[10px]">Mei 2026</span>
+      <span class="text-cream/30">·</span>
+      <span class="text-cream/90">Beschikbaar voor 3 nieuwe klanten dit kwartaal.</span>
+      <a href="#contact" class="hidden sm:inline-flex items-center gap-1 text-cream font-medium hover:text-orange transition-colors">
+        Plan een gesprek
+        <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main nav row -->
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-4 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-3 group">
+      <img src="assets/logo-light.png" alt="" class="logo-mark" />
+      <span class="font-display text-[20px] font-semibold tracking-tight">Mentink op maat</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1.5 text-[15px]" id="nav-links">
+      <a href="#diensten"  class="nav-pill">Diensten</a>
+      <a href="#werkwijze" class="nav-pill">Werkwijze</a>
+      <a href="#tarieven"  class="nav-pill">Tarieven</a>
+      <a href="#faq"       class="nav-pill">Vragen</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="tel:+31628215898" class="hidden md:inline text-[14px] font-mono tracking-wide text-ink2">06&nbsp;2821&nbsp;5898</a>
+      <a href="#contact" class="btn-primary text-[14px]">
+        Start gesprek
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ SCROLL DOTS ============ -->
+<nav class="scroll-dots" id="scroll-dots" aria-label="Sectie-navigatie">
+  <ul>
+    <li><a href="#hero"      data-target="hero"><span class="label">Home</span><span class="dot"></span></a></li>
+    <li><a href="#diensten"  data-target="diensten"><span class="label">Diensten</span><span class="dot"></span></a></li>
+    <li><a href="#werkwijze" data-target="werkwijze"><span class="label">Werkwijze</span><span class="dot"></span></a></li>
+    <li><a href="#tarieven"  data-target="tarieven"><span class="label">Tarieven</span><span class="dot"></span></a></li>
+    <li><a href="#faq"       data-target="faq"><span class="label">Vragen</span><span class="dot"></span></a></li>
+    <li><a href="#contact"   data-target="contact"><span class="label">Contact</span><span class="dot"></span></a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="hero-section relative z-10 overflow-hidden" data-section data-theme="light">
+  <div class="gradient-blob"></div>
+
+  <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 pt-4 md:pt-12 lg:pt-20 pb-10 md:pb-20 lg:pb-24 w-full">
+    <div class="grid grid-cols-12 gap-6 md:gap-12 items-center">
+
+      <!-- LEFT -->
+      <div class="col-span-12 lg:col-span-7">
+        <div class="flex flex-wrap items-center gap-4 mb-5 reveal" style="animation-delay:.05s">
+          <p class="eyebrow">№ 01 &nbsp;·&nbsp; Boekhouding</p>
+          <span class="status-pill">
+            <span class="dot"></span>
+            3 plekken vrij · Q2
+          </span>
+        </div>
+
+        <h1 class="display-huge text-[44px] sm:text-[60px] md:text-[80px] lg:text-[112px] xl:text-[136px] reveal" style="animation-delay:.15s">
+          Jouw boekhouding,<br>
+          <span class="italic-swash">op maat</span> geregeld.
+        </h1>
+
+        <div class="mt-6 md:mt-10 grid grid-cols-12 gap-6">
+          <p class="col-span-12 md:col-span-7 text-[15px] md:text-[17px] lg:text-[19px] leading-[1.55] text-ink2 max-w-[56ch] reveal" style="animation-delay:.3s">
+            Voor ondernemers die liever <em class="font-display italic text-orange">ondernemen</em> dan administratie sorteren. Ik regel je boekhouding en BTW-aangifte tegen een vaste maandprijs &mdash; of huur me per uur in als dat beter past.
+          </p>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-3 reveal" style="animation-delay:.45s">
+          <a href="#tarieven" class="btn-primary">
+            Bekijk tarieven
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#werkwijze" class="btn-ghost">Hoe werkt het?</a>
+        </div>
+      </div>
+
+      <!-- RIGHT: Job photo + floating cards (hidden below lg so the hero
+           collapses to a single column that fits 100svh on phone/tablet
+           and snap doesn't skip past the headline) -->
+      <div class="hidden lg:block lg:col-span-5 reveal" style="animation-delay:.5s">
+        <div class="photo-slot-wrap relative max-w-[420px] mx-auto lg:ml-auto lg:mr-0">
+
+          <!-- Caption above the photo, top-left -->
+          <p class="photo-slot-caption">Job achter de laptop</p>
+
+          <!-- TODO: vervang door echte foto van Job (4:5 portrait, warm licht) -->
+          <div class="photo-slot">
+            <svg class="photo-slot__art" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="100" cy="60" r="22" fill="currentColor"/>
+              <path d="M55 130 Q 100 100 145 130 L 152 175 L 48 175 Z" fill="currentColor"/>
+              <rect x="40" y="195" width="120" height="6" rx="2" fill="currentColor"/>
+              <rect x="52" y="155" width="96" height="42" rx="3" fill="currentColor" opacity="0.7"/>
+              <rect x="58" y="161" width="60" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
+              <rect x="58" y="168" width="80" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
+              <rect x="58" y="175" width="48" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
+              <rect x="58" y="184" width="36" height="6" rx="2" fill="#CC4A1D" opacity="0.7"/>
+            </svg>
+          </div>
+
+          <div class="glass-card float-a absolute top-6 -right-3 md:-right-8 w-[230px]">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-full bg-logoGreen/10 flex items-center justify-center shrink-0">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M4 9.5L7.5 13L14 6" stroke="#1E5A38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="font-mono text-[10px] tracking-widest uppercase text-mute">BTW Q2 · 2026</p>
+                <p class="font-display text-[15px] font-semibold mt-0.5 leading-tight">Aangifte ingediend</p>
+                <p class="text-[12px] text-ink2 mt-1 leading-snug">Op tijd verwerkt &mdash; geen actie nodig.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card float-b absolute -bottom-5 -left-3 md:-left-10 w-[260px]">
+            <div class="flex items-center justify-between mb-2">
+              <p class="font-mono text-[10px] tracking-widest uppercase text-mute">Factuur · 2026-014</p>
+              <span class="font-mono text-[10px] tracking-widest uppercase text-orange">Betaald</span>
+            </div>
+            <div class="flex items-baseline justify-between">
+              <p class="font-display num-tab text-[24px] font-semibold tracking-tight">€ 1.250<span class="text-mute text-[14px]">,00</span></p>
+              <p class="font-mono text-[11px] text-mute">14 dagen</p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-rule/60 flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-orange/15 flex items-center justify-center">
+                <svg width="11" height="11" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="#CC4A1D" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+              </div>
+              <p class="text-[12px] text-ink2">Herinnering verzonden</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIENSTEN — cinematic full-bleed bg, trimmed to fit 100svh ============ -->
+<section id="diensten" class="diensten-section snap-pane relative z-10" data-section data-theme="dark">
+  <div class="diensten-bg"></div>
+  <div class="diensten-overlay"></div>
+
+  <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-16 w-full">
+    <div class="grid grid-cols-12 gap-3 md:gap-10 mb-5 md:mb-12">
+      <div class="col-span-12 md:col-span-4">
+        <p class="eyebrow mb-2 md:mb-3 scroll-reveal">№ 02 &nbsp;·&nbsp; Wat ik doe</p>
+        <h2 class="font-display text-[30px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-semibold text-cream">
+          Vier diensten,<br>
+          <span class="italic-swash" style="color:#E9A76A">één</span> aanspreekpunt.
+        </h2>
+      </div>
+      <div class="col-span-12 md:col-span-7 md:col-start-6 flex items-end">
+        <p class="text-[13px] md:text-[17px] leading-[1.45] md:leading-[1.5] text-ink2 max-w-[58ch] scroll-reveal">
+          Geen losse onderaannemers, geen doorverwijzingen. Alles via één persoon die jouw cijfers kent.
+        </p>
+      </div>
+    </div>
+
+    <div class="rule-top">
+      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+        <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">01</span>
+        <div class="col-span-10 md:col-span-5">
+          <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">Boekhouding</h3>
+          <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Programma · inboeken · controle</p>
+        </div>
+        <p class="col-span-12 md:col-span-5 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+          Moneybird met bankkoppeling. Bij Standaard en Premium boek ik je bonnen en facturen in. Bij Basis controleer ik maandelijks.
+        </p>
+        <div class="hidden md:flex md:col-span-1 md:justify-end">
+          <span class="svc-arrow inline-flex w-9 h-9 items-center justify-center rounded-full border">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 11L11 3M5 3h6v6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+      </article>
+
+      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+        <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">02</span>
+        <div class="col-span-10 md:col-span-5">
+          <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">BTW &amp; inkomstenbelasting</h3>
+          <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Kwartaal · jaar · suppleties</p>
+        </div>
+        <p class="col-span-12 md:col-span-5 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+          BTW per kwartaal bij alle pakketten. IB jaarlijks bij Premium (of los). Geen verrassingen, op tijd ingediend.
+        </p>
+        <div class="hidden md:flex md:col-span-1 md:justify-end">
+          <span class="svc-arrow inline-flex w-9 h-9 items-center justify-center rounded-full border">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 11L11 3M5 3h6v6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+      </article>
+
+      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+        <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">03</span>
+        <div class="col-span-10 md:col-span-5">
+          <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">Facturen &amp; herinneringen</h3>
+          <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Versturen · debiteuren · opvolging</p>
+        </div>
+        <p class="col-span-12 md:col-span-5 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+          Bij Premium maak ik je facturen en stuur betaalherinneringen aan klanten die te laat zijn. Jij hoeft het niet bij te houden.
+        </p>
+        <div class="hidden md:flex md:col-span-1 md:justify-end">
+          <span class="svc-arrow inline-flex w-9 h-9 items-center justify-center rounded-full border">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 11L11 3M5 3h6v6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+      </article>
+
+      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+        <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">04</span>
+        <div class="col-span-10 md:col-span-5">
+          <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">Financieel advies</h3>
+          <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Per uur · €40 · geen abonnement</p>
+        </div>
+        <p class="col-span-12 md:col-span-5 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+          Cashflow, prognoses of even sparren — €40/uur, ook zonder lopend abonnement. Klare taal, geen jargon.
+        </p>
+        <div class="hidden md:flex md:col-span-1 md:justify-end">
+          <span class="svc-arrow inline-flex w-9 h-9 items-center justify-center rounded-full border">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M3 11L11 3M5 3h6v6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WERKWIJZE — snap-pane centred, smaller step numerals ============ -->
+<section id="werkwijze" class="bg-forest text-cream relative snap-pane" data-section data-theme="dark">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-20 relative w-full">
+    <div class="grid grid-cols-12 gap-3 md:gap-10 mb-5 md:mb-14">
+      <div class="col-span-12 md:col-span-5">
+        <p class="eyebrow mb-2 md:mb-4 scroll-reveal" style="color:#C5B896">№ 03 &nbsp;·&nbsp; Werkwijze</p>
+        <h2 class="font-display text-[28px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-semibold">
+          In <span style="color:#E9A76A" class="font-display italic">drie</span> stappen<br>over.
+        </h2>
+      </div>
+      <div class="col-span-12 md:col-span-6 md:col-start-7 flex items-end">
+        <p class="text-[12px] md:text-[17px] leading-[1.4] md:leading-[1.5] text-cream/80 max-w-[58ch] scroll-reveal">
+          Binnen één tot twee weken sta je op het maandelijkse ritme.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+      <div class="border-t border-cream/20 pt-3 md:pt-6 scroll-reveal">
+        <p class="font-display italic text-[32px] md:text-[56px] lg:text-[64px] leading-none font-semibold" style="color:#E9A76A">01</p>
+        <h3 class="font-display text-[18px] md:text-[24px] mt-1 md:mt-3 tracking-tight font-semibold">Kennismaking</h3>
+        <p class="mt-1 md:mt-2 text-[12px] md:text-[15px] text-cream/80 leading-[1.4] md:leading-[1.55] max-w-[40ch]">
+          30 minuten, bij jou langs of via video. We kijken of er een klik is en welk pakket past. Voorstel binnen 24 uur.
+        </p>
+        <p class="font-mono text-[10px] md:text-[11px] text-cream/50 mt-2 md:mt-4">GRATIS · VRIJBLIJVEND</p>
+      </div>
+      <div class="border-t border-cream/20 pt-3 md:pt-6 scroll-reveal">
+        <p class="font-display italic text-[32px] md:text-[56px] lg:text-[64px] leading-none font-semibold" style="color:#E9A76A">02</p>
+        <h3 class="font-display text-[18px] md:text-[24px] mt-1 md:mt-3 tracking-tight font-semibold">Overdracht</h3>
+        <p class="mt-1 md:mt-2 text-[12px] md:text-[15px] text-cream/80 leading-[1.4] md:leading-[1.55] max-w-[40ch]">
+          Machtigingen, bankkoppelingen, overname van je oude boekhouder — dat regel ik. Jij levert alleen de saldibalans aan.
+        </p>
+        <p class="font-mono text-[10px] md:text-[11px] text-cream/50 mt-2 md:mt-4">1-2 WEKEN</p>
+      </div>
+      <div class="border-t border-cream/20 pt-3 md:pt-6 scroll-reveal">
+        <p class="font-display italic text-[32px] md:text-[56px] lg:text-[64px] leading-none font-semibold" style="color:#E9A76A">03</p>
+        <h3 class="font-display text-[18px] md:text-[24px] mt-1 md:mt-3 tracking-tight font-semibold">Maandelijks gemak</h3>
+        <p class="mt-1 md:mt-2 text-[12px] md:text-[15px] text-cream/80 leading-[1.4] md:leading-[1.55] max-w-[40ch]">
+          Bonnen via de app, factuur in je mail, BTW elk kwartaal. Vragen? Een appje of telefoontje. Eén vast aanspreekpunt.
+        </p>
+        <p class="font-mono text-[10px] md:text-[11px] text-cream/50 mt-2 md:mt-4">DOORLOPEND</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING — glassmorphic tabs ============ -->
+<section id="tarieven" class="relative z-10 snap-pane" data-section data-theme="light">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-6 md:py-20 w-full">
+    <div class="grid grid-cols-12 gap-3 md:gap-10 mb-3 md:mb-12">
+      <div class="col-span-12 md:col-span-5">
+        <p class="eyebrow mb-2 md:mb-3 scroll-reveal">№ 04 &nbsp;·&nbsp; Tarieven</p>
+        <h2 class="font-display text-[28px] sm:text-[40px] md:text-[60px] leading-[0.95] tracking-tight scroll-reveal font-semibold">
+          Vaste prijs.<br>
+          <span class="italic-swash">Geen</span> verrassingen.
+        </h2>
+      </div>
+      <div class="col-span-12 md:col-span-6 md:col-start-7 flex items-end">
+        <p class="text-[12px] md:text-[17px] leading-[1.4] md:leading-[1.5] text-ink2 max-w-[58ch] scroll-reveal">
+          Per maand, excl. BTW. Opzegtermijn één maand. Geen instapkosten.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-5">
+      <!-- Tier 1: Basis (glass) -->
+      <div class="price-card rounded-[20px] md:rounded-[28px] p-3 md:p-7 flex flex-col scroll-reveal">
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Basis</h3>
+          <span class="font-mono text-[9px] md:text-[11px] text-mute tracking-widest">DOE-HET-ZELF</span>
+        </div>
+        <p class="hidden md:block mt-2 text-[14px] text-ink2">Voor ZZP'ers die zelf willen inboeken en alleen een controle nodig hebben.</p>
+        <div class="hidden md:block mt-8 mb-6 price-rule border-b border-rule"></div>
+        <p class="flex items-baseline gap-1">
+          <span class="font-display num-tab text-[26px] md:text-[64px] leading-none tracking-tight font-semibold">€50</span>
+          <span class="text-mute text-[14px] font-mono">/mnd</span>
+        </p>
+        <ul class="mt-1.5 md:mt-8 space-y-0.5 md:space-y-3 text-[11px] md:text-[15px] flex-1">
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> Boekhoudprogramma (jij gebruikt 'm zelf)</li>
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> Controle op je boekingen</li>
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> BTW-aangifte per kwartaal</li>
+          <li class="hidden md:flex gap-3 text-mute"><span class="mt-1">○</span> Inboeken (jij doet het zelf)</li>
+          <li class="hidden md:flex gap-3 text-mute"><span class="mt-1">○</span> Inkomstenbelasting (los bij te boeken)</li>
+        </ul>
+        <a href="#contact" class="btn-ghost mt-2 md:mt-10 justify-center">Kies Basis</a>
+      </div>
+
+      <!-- Tier 2: Standaard (featured / dark contrast) -->
+      <div class="price-card-featured rounded-[20px] md:rounded-[28px] p-3 md:p-7 flex flex-col scroll-reveal relative">
+        <span class="absolute -top-2 md:-top-3 left-4 md:left-8 bg-orange text-cream text-[9px] md:text-[11px] font-mono tracking-widest px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase">Populair</span>
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Standaard</h3>
+          <span class="font-mono text-[9px] md:text-[11px] tracking-widest" style="color:#C5B896">UIT HANDEN</span>
+        </div>
+        <p class="hidden md:block mt-2 text-[14px] text-cream/70">Het meest gekozen pakket &mdash; je administratie volledig uit handen, zonder zorgen.</p>
+        <div class="hidden md:block mt-8 mb-6 price-rule border-b"></div>
+        <p class="flex items-baseline gap-1">
+          <span class="font-display num-tab text-[26px] md:text-[64px] leading-none tracking-tight font-semibold">€75</span>
+          <span class="text-cream/60 text-[14px] font-mono">/mnd</span>
+        </p>
+        <ul class="mt-1.5 md:mt-8 space-y-0.5 md:space-y-3 text-[11px] md:text-[15px] flex-1">
+          <li class="flex gap-3"><span class="price-accent mt-1">●</span> Boekhoudprogramma &mdash; ik boek voor je in</li>
+          <li class="flex gap-3"><span class="price-accent mt-1">●</span> Controle op je boekingen</li>
+          <li class="flex gap-3"><span class="price-accent mt-1">●</span> BTW-aangifte per kwartaal</li>
+          <li class="flex gap-3"><span class="price-accent mt-1">●</span> Bonnen scannen via de app</li>
+          <li class="hidden md:flex gap-3 text-cream/50"><span class="mt-1">○</span> Inkomstenbelasting (los bij te boeken)</li>
+        </ul>
+        <a href="#contact" class="mt-2 md:mt-10 inline-flex justify-center items-center gap-2 bg-cream text-ink rounded-[32px] py-3.5 px-5 font-medium hover:bg-orange hover:text-cream transition-colors">
+          Kies Standaard
+          <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+
+      <!-- Tier 3: Premium (glass) -->
+      <div class="price-card rounded-[20px] md:rounded-[28px] p-3 md:p-7 flex flex-col scroll-reveal">
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Premium</h3>
+          <span class="font-mono text-[9px] md:text-[11px] text-mute tracking-widest">ALL-IN</span>
+        </div>
+        <p class="hidden md:block mt-2 text-[14px] text-ink2">Alles uit Standaard, plus IB en je facturatie. Volledig zorgeloos.</p>
+        <div class="hidden md:block mt-8 mb-6 price-rule border-b border-rule"></div>
+        <p class="flex items-baseline gap-1">
+          <span class="font-display num-tab text-[26px] md:text-[64px] leading-none tracking-tight font-semibold">€100</span>
+          <span class="text-mute text-[14px] font-mono">/mnd</span>
+        </p>
+        <ul class="mt-1.5 md:mt-8 space-y-0.5 md:space-y-3 text-[11px] md:text-[15px] flex-1">
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> Alles uit Standaard</li>
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> Inkomstenbelasting (jaarlijks)</li>
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> Facturen maken &amp; versturen</li>
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> Betaalherinneringen aan klanten</li>
+          <li class="flex gap-3"><span class="text-orange mt-1">●</span> Voorrang bij vragen</li>
+        </ul>
+        <a href="#contact" class="btn-ghost mt-2 md:mt-10 justify-center">Kies Premium</a>
+      </div>
+    </div>
+
+    <div class="perhour-strip mt-3 md:mt-6 rounded-[16px] md:rounded-[28px] p-3 md:p-6 grid grid-cols-12 gap-2 md:gap-8 items-center scroll-reveal">
+      <div class="col-span-8 md:col-span-8">
+        <h3 class="font-display text-[13px] md:text-[24px] tracking-tight leading-tight font-semibold">
+          Liever per uur? <span class="italic-swash">€40/uur</span><span class="hidden md:inline"> — incl. financieel advies, geen abonnement.</span>
+        </h3>
+      </div>
+      <div class="col-span-4 md:col-span-4 flex md:justify-end justify-end">
+        <a href="#contact" class="btn-primary">
+          <span class="hidden md:inline">Plan een uur</span><span class="md:hidden">Plan</span>
+          <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <p class="text-center text-[10px] md:text-[13px] text-mute font-mono mt-2 md:mt-6">
+      Overstappen? Ik regel het zonder extra kosten.
+    </p>
+  </div>
+</section>
+
+<!-- HIDDEN-FOR-LATER:testimonial — terug zodra er een echte klant is met een quote
+<section class="rule-top">[...kept compact...]</section>
+END HIDDEN-FOR-LATER:testimonial -->
+
+<!-- ============ FAQ (snap-pane fits viewport; section-tall lets it grow if user opens many) ============ -->
+<section id="faq" class="relative z-10 rule-top snap-pane section-tall" data-section data-theme="light">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-20 w-full">
+    <div class="grid grid-cols-12 gap-6 md:gap-10">
+      <div class="col-span-12 md:col-span-4">
+        <p class="eyebrow mb-5 scroll-reveal">№ 05 &nbsp;·&nbsp; Veelgestelde vragen</p>
+        <h2 class="font-display text-[34px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-medium">Antwoorden,<br><span class="italic-swash">eerlijk.</span></h2>
+        <p class="mt-8 text-[16px] text-ink2 scroll-reveal">
+          Staat jouw vraag er niet tussen? Bel of mail gerust: <a href="tel:+31628215898" class="link-under">06 2821 5898</a>.
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-7 md:col-start-6">
+        <div class="rule-top">
+          <details class="rule-bottom py-6 group scroll-reveal">
+            <summary class="flex items-center justify-between gap-6">
+              <span class="font-display text-[18px] md:text-[22px] lg:text-[26px] tracking-tight pr-4 font-semibold">Kan ik overstappen als ik al een boekhouder heb?</span>
+              <span class="faq-plus shrink-0 mt-2"></span>
+            </summary>
+            <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
+              Ja, en ik regel de overdracht voor je. Ik neem contact op met je huidige boekhouder, haal de saldibalans en onderliggende stukken op, en zet alles klaar in het nieuwe systeem. Meestal binnen één tot twee weken over.
+            </p>
+          </details>
+
+          <details class="rule-bottom py-6 group scroll-reveal">
+            <summary class="flex items-center justify-between gap-6">
+              <span class="font-display text-[18px] md:text-[22px] lg:text-[26px] tracking-tight pr-4 font-semibold">Welke software gebruik je?</span>
+              <span class="faq-plus shrink-0 mt-2"></span>
+            </summary>
+            <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
+              Standaard werk ik in Moneybird &mdash; fijn voor ZZP en kleine BV's, en je kunt zelf altijd meekijken. Heb je al iets anders draaien (Exact, e-Boekhouden, etc.)? Vertel het even, dan kijken we of we daarmee verder werken.
+            </p>
+          </details>
+
+          <details class="rule-bottom py-6 group scroll-reveal">
+            <summary class="flex items-center justify-between gap-6">
+              <span class="font-display text-[18px] md:text-[22px] lg:text-[26px] tracking-tight pr-4 font-semibold">Wat valt er onder &ldquo;controle op boekingen&rdquo;?</span>
+              <span class="faq-plus shrink-0 mt-2"></span>
+            </summary>
+            <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
+              Ik check elke maand of de boekingen kloppen: zijn de juiste BTW-codes gebruikt, missen er bonnen, kloppen de tegenrekeningen. Zo voorkomen we verrassingen bij de aangifte.
+            </p>
+          </details>
+
+          <details class="rule-bottom py-6 group scroll-reveal">
+            <summary class="flex items-center justify-between gap-6">
+              <span class="font-display text-[18px] md:text-[22px] lg:text-[26px] tracking-tight pr-4 font-semibold">Wat als ik in een maand veel meer facturen heb?</span>
+              <span class="faq-plus shrink-0 mt-2"></span>
+            </summary>
+            <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
+              Een drukke maand maakt de prijs niet duurder. Pas als je structureel boven je staffel uitkomt, kijken we samen of een ander pakket beter past &mdash; vanaf de volgende maand. Ik waarschuw je altijd voordat ik iets aanpas.
+            </p>
+          </details>
+
+          <details class="rule-bottom py-6 group scroll-reveal">
+            <summary class="flex items-center justify-between gap-6">
+              <span class="font-display text-[18px] md:text-[22px] lg:text-[26px] tracking-tight pr-4 font-semibold">Kan ik ook losse uren inhuren zonder abonnement?</span>
+              <span class="faq-plus shrink-0 mt-2"></span>
+            </summary>
+            <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
+              Ja. Voor losse vragen, een eenmalige opdracht of financieel advies kun je me per uur inhuren voor €40. Geen abonnement nodig, factuur achteraf.
+            </p>
+          </details>
+
+          <details class="rule-bottom py-6 group scroll-reveal">
+            <summary class="flex items-center justify-between gap-6">
+              <span class="font-display text-[18px] md:text-[22px] lg:text-[26px] tracking-tight pr-4 font-semibold">Hoe snel reageer je op vragen?</span>
+              <span class="faq-plus shrink-0 mt-2"></span>
+            </summary>
+            <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
+              Op werkdagen meestal binnen één werkdag, vaak sneller. Mail, telefoon, WhatsApp &mdash; pak gewoon wat het handigst is.
+            </p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section id="contact" class="bg-ink text-cream relative overflow-hidden snap-pane" data-section data-theme="dark">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-10 md:py-28 relative w-full">
+    <img src="assets/logo-dark.png" alt="" aria-hidden="true" class="pointer-events-none select-none absolute -right-32 -top-16 w-[640px] md:w-[920px] opacity-[0.07]" />
+
+    <div class="relative grid grid-cols-12 gap-4 md:gap-10">
+      <div class="col-span-12 md:col-span-8">
+        <p class="eyebrow mb-3 md:mb-6 scroll-reveal" style="color:#C5B896">Laten we kennismaken</p>
+        <h2 class="font-display text-[32px] sm:text-[52px] md:text-[72px] lg:text-[96px] leading-[0.94] tracking-tight scroll-reveal font-medium">
+          Klaar voor<br>
+          <span style="color:#E9A76A" class="italic-swash">heldere cijfers?</span>
+        </h2>
+        <p class="mt-3 md:mt-8 text-[13px] md:text-[20px] text-cream/80 max-w-[54ch] leading-[1.45] md:leading-[1.55] scroll-reveal">
+          Plan een kosteloos kennismakingsgesprek van 30 minuten. Bij jou langs of via video &mdash; wat je het prettigst vindt.
+        </p>
+
+        <div class="mt-4 md:mt-10 flex flex-wrap gap-2 md:gap-3 scroll-reveal">
+          <a href="mailto:Job@mentinkopmaat.nl" class="inline-flex items-center gap-2 bg-cream text-ink rounded-[32px] py-2 md:py-4 px-4 md:px-6 font-medium text-[13px] md:text-base hover:bg-orange hover:text-cream transition-colors">
+            Job@mentinkopmaat.nl
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+          </a>
+          <a href="tel:+31628215898" class="inline-flex items-center gap-2 border border-cream/40 rounded-[32px] py-2 md:py-4 px-4 md:px-6 font-medium text-[13px] md:text-base hover:bg-cream/10 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 10.5v1.5a1 1 0 0 1-1 1A9 9 0 0 1 2 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 1 .75l.5 2a1 1 0 0 1-.25 1l-.9.9a7 7 0 0 0 3.5 3.5l.9-.9a1 1 0 0 1 1-.25l2 .5a1 1 0 0 1 .75 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            06 2821 5898
+          </a>
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-3 md:col-start-10 flex flex-row md:flex-col justify-between gap-4 md:gap-6 border-t md:border-t-0 md:border-l border-cream/20 pt-4 md:pl-8 md:pt-0">
+        <div>
+          <p class="eyebrow mb-1 md:mb-2" style="color:#C5B896">Bereikbaar</p>
+          <p class="text-[12px] md:text-[16px] leading-snug md:leading-relaxed">Ma t/m vr<br>via mail, app of telefoon.</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-1 md:mb-2" style="color:#C5B896">Werkgebied</p>
+          <p class="text-[12px] md:text-[16px] leading-snug md:leading-relaxed font-mono text-cream/80">
+            Online &middot; heel NL<br>
+            Persoonlijk &middot; op afspraak
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-ink text-cream/70 rule-top border-cream/15" id="footer">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-14">
+    <div class="grid grid-cols-12 gap-y-8 md:gap-8 text-[14px]">
+      <div class="col-span-12 md:col-span-4">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="assets/logo-dark.png" alt="" class="logo-mark" />
+          <span class="font-display text-[18px] text-cream font-semibold">Mentink op maat</span>
+        </div>
+        <p class="max-w-[34ch] leading-relaxed">
+          Boekhouding voor ondernemers die hun hoofd liever bij ondernemen houden.
+        </p>
+      </div>
+      <div class="col-span-6 md:col-span-2">
+        <p class="eyebrow mb-4" style="color:#C5B896">Diensten</p>
+        <ul class="space-y-2">
+          <li><a href="#diensten" class="hover:text-cream">Boekhouding</a></li>
+          <li><a href="#diensten" class="hover:text-cream">BTW &amp; IB</a></li>
+          <li><a href="#diensten" class="hover:text-cream">Facturen</a></li>
+          <li><a href="#diensten" class="hover:text-cream">Advies (per uur)</a></li>
+        </ul>
+      </div>
+      <div class="col-span-6 md:col-span-2">
+        <p class="eyebrow mb-4" style="color:#C5B896">Info</p>
+        <ul class="space-y-2">
+          <li><a href="#werkwijze" class="hover:text-cream">Werkwijze</a></li>
+          <li><a href="#tarieven" class="hover:text-cream">Tarieven</a></li>
+          <li><a href="#faq" class="hover:text-cream">Vragen</a></li>
+          <li><a href="#contact" class="hover:text-cream">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-span-12 md:col-span-3">
+        <p class="eyebrow mb-4" style="color:#C5B896">Contact</p>
+        <p class="leading-relaxed">
+          <a href="tel:+31628215898" class="hover:text-cream">06 2821 5898</a><br>
+          <a href="mailto:Job@mentinkopmaat.nl" class="hover:text-cream">Job@mentinkopmaat.nl</a>
+        </p>
+      </div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-cream/15 flex flex-wrap justify-between gap-4 text-[12px] font-mono text-cream/50 uppercase tracking-widest">
+      <!-- TODO: vul KvK + BTW-nummer in zodra geregistreerd -->
+      <p>© 2026 Mentink op maat &middot; KvK [TBD] &middot; BTW [TBD]</p>
+      <p>Boekhouding op maat</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ Lenis 1.3.23 + Snap module (UMD globals) ============ -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis-snap.min.js"></script>
+
+<script>
+(() => {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sections = Array.from(document.querySelectorAll('[data-section]'));
+
+  // ----------------------------------------------------------------
+  // Active-dot + nav-pill + theme spy (works regardless of scroll engine)
+  // ----------------------------------------------------------------
+  const dotLinks = document.querySelectorAll('#scroll-dots a');
+  const navLinks = document.querySelectorAll('#nav-links a');
+  const scrollDotsEl = document.getElementById('scroll-dots');
+
+  const setActive = (id) => {
+    dotLinks.forEach(l => l.classList.toggle('is-active', l.dataset.target === id));
+    navLinks.forEach(l => l.classList.toggle('is-active', l.getAttribute('href') === '#' + id));
+  };
+  const setTheme = (theme) => {
+    if (scrollDotsEl) scrollDotsEl.classList.toggle('is-dark', theme === 'dark');
+  };
+  // rootMargin -50% top + bottom: only fire when the section's center crosses
+  // the viewport center. Works for tall sections (FAQ) where 0.4 threshold
+  // could never be reached.
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        setActive(e.target.id);
+        setTheme(e.target.dataset.theme || 'light');
+      }
+    });
+  }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s => spy.observe(s));
+
+  // ----------------------------------------------------------------
+  // Scroll-dots: expand pill on touch (mobile). Desktop uses :hover.
+  // We add .is-touched on touchstart and auto-remove after 2.5s of
+  // inactivity, so the pill briefly shows on tap and collapses again.
+  // ----------------------------------------------------------------
+  if (scrollDotsEl) {
+    let touchTimer;
+    const showTouched = () => {
+      scrollDotsEl.classList.add('is-touched');
+      clearTimeout(touchTimer);
+      touchTimer = setTimeout(() => {
+        scrollDotsEl.classList.remove('is-touched');
+      }, 2500);
+    };
+    scrollDotsEl.addEventListener('touchstart', showTouched, { passive: true });
+    // Pointer events catch stylus / hybrid devices that don't fire touch
+    scrollDotsEl.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' || e.pointerType === 'pen') showTouched();
+    }, { passive: true });
+  }
+
+  // ----------------------------------------------------------------
+  // Service-card spotlight cursor (unchanged)
+  // ----------------------------------------------------------------
+  document.querySelectorAll('[data-svc]').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.removeProperty('--mx');
+      card.style.removeProperty('--my');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Scroll-reveal (unchanged)
+  // ----------------------------------------------------------------
+  const reveal = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        reveal.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.scroll-reveal').forEach(el => reveal.observe(el));
+
+  // ----------------------------------------------------------------
+  // NOTE: this site intentionally always runs Lenis even when the user has
+  // OS-level reduced-motion turned on, because the section-snap behaviour
+  // is core to the design. We DO shorten timings on reduced-motion so it's
+  // still gentler than the default ride.
+  // ----------------------------------------------------------------
+  const animScale = reduceMotion ? 0.55 : 1;       // shorter durations if rm
+
+  // ----------------------------------------------------------------
+  // LENIS — virtualized smooth scroll engine
+  // ----------------------------------------------------------------
+  const lenis = new Lenis({
+    duration: 1.15 * animScale,                     // base smoothing duration
+    easing: t => 1 - Math.pow(1 - t, 4),            // easeOutQuart — quick start, soft tail
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 1.4,                           // a bit more travel on touch
+  });
+  window.lenis = lenis; // debug handle
+
+  // ----------------------------------------------------------------
+  // SNAP — purpose-built section-snap module
+  //
+  // Key advantage over hand-rolled rAF: the snap module debounces by
+  // *destination*, not source. Wheel #2 mid-animation correctly advances
+  // the target to N+2 instead of re-pointing to the same N+1 (which was
+  // the "instant jump / trip" bug in the previous custom JS).
+  // ----------------------------------------------------------------
+  const snap = new Snap(lenis, {
+    type: 'lock',                                   // DIRECTION-based: wheel down = next, wheel up = prev
+    distanceThreshold: '500%',                      // CRITICAL: in 'lock' mode the default '50%' meant
+                                                    // user had to scroll half a viewport before the snap
+                                                    // would even consider firing. '500%' = 5×vh = effectively
+                                                    // unlimited, so any wheel tick triggers the next snap.
+    lerp: 0.1,
+    duration: 1.1,                                  // snap animation length
+    easing: t => t < 0.5
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2,            // easeInOutCubic — slow→fast→soft landing
+    debounce: 0,                                    // never swallow wheels — module re-targets
+  });
+  window.snap = snap; // debug handle
+
+  // Register every [data-section] as a snap point.
+  // Tall sections (.section-tall, e.g. FAQ) snap at TOP and BOTTOM so
+  // users can scroll naturally inside, then re-snap at the bottom edge.
+  sections.forEach(el => {
+    if (el.classList.contains('section-tall')) {
+      snap.addElement(el, { align: ['start', 'end'] });
+    } else {
+      snap.addElement(el, { align: 'start' });
+    }
+  });
+
+  // ----------------------------------------------------------------
+  // rAF loop
+  // ----------------------------------------------------------------
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // ----------------------------------------------------------------
+  // Anchor / dot / nav-pill click → smooth scroll via Lenis
+  // ----------------------------------------------------------------
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (!id || id === '#') return;
+      const t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      lenis.scrollTo(t, {
+        offset: 0,
+        duration: 1.2,
+        easing: x => 1 - Math.pow(1 - x, 4),
+      });
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Hash on initial load → smooth-scroll there once Lenis is ready
+  // ----------------------------------------------------------------
+  if (location.hash && document.querySelector(location.hash)) {
+    history.scrollRestoration = 'manual';
+    requestAnimationFrame(() => {
+      lenis.scrollTo(location.hash, { immediate: true, force: true });
+    });
+  }
+
+  // ----------------------------------------------------------------
+  // Recompute snap points on resize (mobile address-bar collapse, etc.)
+  // ----------------------------------------------------------------
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => snap.resize && snap.resize(), 150);
+  });
+})();
+</script>
+
+</body>
+</html>
