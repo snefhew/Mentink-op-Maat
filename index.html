@@ -165,113 +165,189 @@
      that drift on a 24s loop. Pure transform — no layout cost. The motion is
      imperceptible at any single instant (Monopo-style "gradient as motion
      vector"); over time the page feels alive without ever being distracting. */
-  /* ---------- METABALL/GOO BLOBS — SVG filter merges overlapping orbs
-     into one continuous shape. Two orange primaries start coincident
-     (one big blob), drift apart over 22s (two blobs), and merge back.
-     A forest-green third orb wanders independently; a small amber accent
-     pings in and out. Out-of-phase opacity pulses keep the page alive
-     without ever reading as a sync'd loop.  Pure transform+opacity =
-     GPU-accelerated, foolproof, no JS. */
+  /* ---------- METABALL/GOO BLOBS — atmospheric layered animation
+     6 orbs, each with FOUR independent animations (drift / shake /
+     breathe / pulse). Outer .blob-wrap handles the slow long-distance
+     drift via the individual `translate` property; inner .blob-orb
+     handles the fast subtle shake (translate), gentle breathing
+     (scale), and out-of-phase opacity pulse — all on individual
+     transform properties so they never conflict.
+
+     Sizes/opacities reduced ~25% from the previous pass for a more
+     atmospheric, less in-your-face presence. Goo filter threshold
+     softened (22→18) so the merge has a slightly more organic falloff. */
   .gradient-blob {
     position: absolute; inset: 0;
     pointer-events: none; z-index: 0; overflow: hidden;
     filter: url(#goo-blob);
   }
-  .blob-orb {
+  .blob-wrap {
     position: absolute;
+    will-change: translate;
+  }
+  .blob-orb {
+    position: absolute; inset: 0;
     border-radius: 50%;
-    will-change: transform, opacity;
+    will-change: translate, scale, opacity;
   }
-  /* Primary orange — top-right, "anchor" of the merge/split rhythm */
-  .blob-orb-a {
-    width: 460px; height: 460px;
-    top: -160px; right: -80px;
-    background: rgba(204, 74, 29, 0.55);
-    animation:
-      orbDriftA 22s ease-in-out infinite,
-      orbPulseA 9s ease-in-out infinite;
+  /* A — primary orange, top-right anchor */
+  .blob-wrap-a { width: 380px; height: 380px; top: -120px; right: -40px;
+    animation: driftA 26s ease-in-out infinite; }
+  .blob-orb-a { background: rgba(204, 74, 29, 0.42);
+    animation: shakeA 4.3s ease-in-out infinite,
+               breatheA 11s ease-in-out infinite,
+               pulseA 9s ease-in-out infinite; }
+  /* B — orange sibling, starts coincident with A (= 1 big blob),
+     drifts opposite (= 2 blobs), back together (= 1 again). 26s cycle */
+  .blob-wrap-b { width: 260px; height: 260px; top: -80px; right: -20px;
+    animation: driftB 26s ease-in-out infinite; }
+  .blob-orb-b { background: rgba(204, 74, 29, 0.36);
+    animation: shakeB 5.1s ease-in-out infinite -1.2s,
+               breatheB 13s ease-in-out infinite -3s,
+               pulseB 11s ease-in-out infinite -2s; }
+  /* C — forest green, slow independent drift on the left */
+  .blob-wrap-c { width: 320px; height: 320px; top: 200px; left: -100px;
+    animation: driftC 32s ease-in-out infinite; }
+  .blob-orb-c { background: rgba(30, 90, 56, 0.32);
+    animation: shakeC 4.7s ease-in-out infinite -2.1s,
+               breatheC 15s ease-in-out infinite -7s,
+               pulseC 14s ease-in-out infinite -5s; }
+  /* D — small amber accent, "ping" in and out */
+  .blob-wrap-d { width: 170px; height: 170px; top: 320px; right: 26%;
+    animation: driftD 38s cubic-bezier(.5,.05,.5,.95) infinite; }
+  .blob-orb-d { background: rgba(233, 167, 106, 0.36);
+    animation: shakeD 3.7s ease-in-out infinite -0.5s,
+               breatheD 9s ease-in-out infinite -3s,
+               pulseD 12s ease-in-out infinite -8s; }
+  /* E — small green dot, bottom-left punctuation */
+  .blob-wrap-e { width: 150px; height: 150px; bottom: 80px; left: 18%;
+    animation: driftE 34s ease-in-out infinite -6s; }
+  .blob-orb-e { background: rgba(30, 90, 56, 0.28);
+    animation: shakeE 5.5s ease-in-out infinite -3s,
+               breatheE 12s ease-in-out infinite -2s,
+               pulseE 16s ease-in-out infinite -9s; }
+  /* F — tiny amber dot, top-center */
+  .blob-wrap-f { width: 100px; height: 100px; top: 30%; left: 38%;
+    animation: driftF 42s ease-in-out infinite -14s; }
+  .blob-orb-f { background: rgba(233, 167, 106, 0.32);
+    animation: shakeF 4.1s ease-in-out infinite -1.8s,
+               breatheF 10s ease-in-out infinite -5s,
+               pulseF 18s ease-in-out infinite -11s; }
+
+  /* Long slow drift — individual translate so it composes with inner shake */
+  @keyframes driftA {
+    0%, 100% { translate: 0 0; }
+    25%      { translate: -50px 70px; }
+    50%      { translate: -160px 110px; }
+    75%      { translate: -80px 80px; }
   }
-  /* Secondary orange — starts overlapping A (= one big blob), splits off */
-  .blob-orb-b {
-    width: 320px; height: 320px;
-    top: -100px; right: -40px;
-    background: rgba(204, 74, 29, 0.50);
-    animation:
-      orbDriftB 22s ease-in-out infinite,
-      orbPulseB 11s ease-in-out infinite -2s;
+  @keyframes driftB {
+    0%, 100% { translate: 0 0; }
+    25%      { translate: 50px 30px; }
+    50%      { translate: 170px 200px; }
+    75%      { translate: 70px 100px; }
   }
-  /* Forest green — independent slow drift on the left, occasionally
-     wanders far enough right to graze A/B for a triple-merge moment */
-  .blob-orb-c {
-    width: 380px; height: 380px;
-    top: 200px; left: -120px;
-    background: rgba(30, 90, 56, 0.42);
-    animation:
-      orbDriftC 28s ease-in-out infinite,
-      orbPulseC 14s ease-in-out infinite -5s;
+  @keyframes driftC {
+    0%, 100% { translate: 0 0; }
+    30%      { translate: 130px 70px; }
+    55%      { translate: 260px -30px; }
+    80%      { translate: 50px 130px; }
   }
-  /* Amber accent — small ping-in-and-out punctuation */
-  .blob-orb-d {
-    width: 200px; height: 200px;
-    top: 320px; right: 24%;
-    background: rgba(233, 167, 106, 0.46);
-    animation:
-      orbDriftD 38s cubic-bezier(.5,.05,.5,.95) infinite,
-      orbPulseD 12s ease-in-out infinite -8s;
+  @keyframes driftD {
+    0%, 100% { translate: 0 0; }
+    20%      { translate: 70px -50px; }
+    40%      { translate: -90px 30px; }
+    60%      { translate: 40px 80px; }
+    80%      { translate: -140px -40px; }
   }
-  /* A and B share a 22s cycle but trace opposite arcs so at 0%/100%
-     they sit on top of each other (one merged blob) and at 50% they
-     reach maximum separation (two distinct blobs). */
-  @keyframes orbDriftA {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    25%      { transform: translate3d(-60px, 80px, 0) scale(1.06); }
-    50%      { transform: translate3d(-180px, 140px, 0) scale(0.94); }
-    75%      { transform: translate3d(-90px, 90px, 0) scale(1.10); }
+  @keyframes driftE {
+    0%, 100% { translate: 0 0; }
+    33%      { translate: 100px -40px; }
+    66%      { translate: -60px 60px; }
   }
-  @keyframes orbDriftB {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    25%      { transform: translate3d(60px, 40px, 0) scale(1.10); }
-    50%      { transform: translate3d(160px, 220px, 0) scale(1.18); }
-    75%      { transform: translate3d(80px, 110px, 0) scale(0.92); }
+  @keyframes driftF {
+    0%, 100% { translate: 0 0; }
+    25%      { translate: -40px 60px; }
+    50%      { translate: 80px 100px; }
+    75%      { translate: -100px -30px; }
   }
-  @keyframes orbDriftC {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    30%      { transform: translate3d(140px, 60px, 0) scale(1.12); }
-    55%      { transform: translate3d(280px, -40px, 0) scale(0.88); }
-    80%      { transform: translate3d(60px, 140px, 0) scale(1.06); }
+
+  /* Subtle shake — fast tiny jitter, 3-5px amplitude. Gives organic life. */
+  @keyframes shakeA {
+    0%, 100% { translate: 0 0; }
+    33%      { translate: 4px -3px; }
+    66%      { translate: -3px 5px; }
   }
-  /* D pings — scale + opacity controlled together for the "in/out" feel */
-  @keyframes orbDriftD {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(0.8); }
-    20%      { transform: translate3d(80px, -60px, 0) scale(1.15); }
-    40%      { transform: translate3d(-100px, 30px, 0) scale(0.7); }
-    60%      { transform: translate3d(40px, 90px, 0) scale(1.25); }
-    80%      { transform: translate3d(-160px, -40px, 0) scale(0.9); }
+  @keyframes shakeB {
+    0%, 100% { translate: 0 0; }
+    25%      { translate: -3px 4px; }
+    50%      { translate: 5px 2px; }
+    75%      { translate: -2px -4px; }
   }
-  @keyframes orbPulseA {
-    0%, 100% { opacity: 0.88; }
+  @keyframes shakeC {
+    0%, 100% { translate: 0 0; }
+    40%      { translate: 4px 4px; }
+    70%      { translate: -5px -2px; }
+  }
+  @keyframes shakeD {
+    0%, 100% { translate: 0 0; }
+    33%      { translate: -3px 3px; }
+    66%      { translate: 4px -4px; }
+  }
+  @keyframes shakeE {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 3px -3px; }
+  }
+  @keyframes shakeF {
+    0%, 100% { translate: 0 0; }
+    33%      { translate: -2px 2px; }
+    66%      { translate: 3px -2px; }
+  }
+
+  /* Breathing scale — gentle in/out 8-15s. Each orb breathes differently. */
+  @keyframes breatheA { 0%, 100% { scale: 1; }    50% { scale: 1.1; } }
+  @keyframes breatheB { 0%, 100% { scale: 0.95; } 50% { scale: 1.18; } }
+  @keyframes breatheC { 0%, 100% { scale: 1.05; } 50% { scale: 0.9; } }
+  @keyframes breatheD { 0%, 100% { scale: 0.85; } 50% { scale: 1.25; } }
+  @keyframes breatheE { 0%, 100% { scale: 1; }    50% { scale: 1.15; } }
+  @keyframes breatheF { 0%, 100% { scale: 0.9; }  50% { scale: 1.2; } }
+
+  /* Opacity pulses — out of phase, multi-keyframe variety. Never sync. */
+  @keyframes pulseA {
+    0%, 100% { opacity: 0.85; }
     50%      { opacity: 1; }
   }
-  @keyframes orbPulseB {
-    0%, 100% { opacity: 0.7; }
+  @keyframes pulseB {
+    0%, 100% { opacity: 0.55; }
     40%      { opacity: 1; }
-    70%      { opacity: 0.55; }
+    70%      { opacity: 0.45; }
   }
-  @keyframes orbPulseC {
-    0%, 100% { opacity: 0.62; }
-    50%      { opacity: 0.92; }
+  @keyframes pulseC {
+    0%, 100% { opacity: 0.6; }
+    50%      { opacity: 0.95; }
   }
-  @keyframes orbPulseD {
+  @keyframes pulseD {
     0%, 100% { opacity: 0.4; }
     20%      { opacity: 0.95; }
     40%      { opacity: 0.55; }
     60%      { opacity: 1; }
     80%      { opacity: 0.65; }
   }
+  @keyframes pulseE {
+    0%, 100% { opacity: 0.5; }
+    33%      { opacity: 0.85; }
+    66%      { opacity: 0.6; }
+  }
+  @keyframes pulseF {
+    0%, 100% { opacity: 0.3; }
+    25%      { opacity: 0.9; }
+    50%      { opacity: 0.5; }
+    75%      { opacity: 1; }
+  }
   /* Skip the GPU-heavy goo filter when reduced-motion is requested */
   @media (prefers-reduced-motion: reduce) {
     .gradient-blob { filter: none; }
-    .blob-orb { animation: none; }
+    .blob-wrap, .blob-orb { animation: none; }
   }
 
   /* rule lines */
@@ -1025,7 +1101,7 @@
         1 0 0 0 0
         0 1 0 0 0
         0 0 1 0 0
-        0 0 0 22 -10" result="goo"/>
+        0 0 0 18 -8" result="goo"/>
       <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
     </filter>
   </defs>
@@ -1091,10 +1167,12 @@
 <!-- ============ HERO ============ -->
 <section id="hero" class="hero-section relative z-10 overflow-hidden" data-section data-theme="light">
   <div class="gradient-blob">
-    <div class="blob-orb blob-orb-a"></div>
-    <div class="blob-orb blob-orb-b"></div>
-    <div class="blob-orb blob-orb-c"></div>
-    <div class="blob-orb blob-orb-d"></div>
+    <div class="blob-wrap blob-wrap-a"><div class="blob-orb blob-orb-a"></div></div>
+    <div class="blob-wrap blob-wrap-b"><div class="blob-orb blob-orb-b"></div></div>
+    <div class="blob-wrap blob-wrap-c"><div class="blob-orb blob-orb-c"></div></div>
+    <div class="blob-wrap blob-wrap-d"><div class="blob-orb blob-orb-d"></div></div>
+    <div class="blob-wrap blob-wrap-e"><div class="blob-orb blob-orb-e"></div></div>
+    <div class="blob-wrap blob-wrap-f"><div class="blob-orb blob-orb-f"></div></div>
   </div>
 
   <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 pt-4 md:pt-12 lg:pt-20 pb-10 md:pb-20 lg:pb-24 w-full">
