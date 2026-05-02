@@ -320,12 +320,14 @@
     box-shadow: inset 0 1px 0 rgba(255,255,255, 0.55);
   }
 
-  /* Individual nav links inside the island — 8px sharp tabs */
+  /* Pill-shaped to match the outer nav-island's curve — the hover /
+     active background now reads as a concentric pill, mirroring the
+     container shape, instead of a rounded-rect floating inside a pill. */
   .nav-pill {
     position: relative;
     display: inline-flex; align-items: center;
-    padding: 8px 14px;
-    border-radius: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
     font-size: 14px;
     font-weight: 500;
     color: #3A332A;
