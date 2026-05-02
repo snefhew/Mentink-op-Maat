@@ -361,10 +361,13 @@
   .sliced-glass-card .glass-slice {
     position: absolute; left: 0; right: 0;
     top: var(--t); height: var(--h);
-    backdrop-filter: blur(var(--b)) saturate(150%);
-    -webkit-backdrop-filter: blur(var(--b)) saturate(150%);
+    backdrop-filter: blur(var(--b)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--b)) saturate(160%);
     background: rgba(255,255,255, var(--a, 0.04));
-    border-top: 1px solid rgba(255,255,255,0.10);
+    /* slightly stronger top-edge highlight makes the venetian
+       slice boundary visible against light cream backdrop */
+    border-top: 1px solid rgba(255,255,255,0.22);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
     pointer-events: none;
   }
   .sliced-glass-card .glass-slice:first-of-type { border-top: 0; }
@@ -809,25 +812,27 @@
               <rect x="58" y="184" width="36" height="6" rx="2" fill="#CC4A1D" opacity="0.7"/>
             </svg>
 
-            <!-- Sliced liquid glass card overlay (Kagool-style) -->
-            <div class="sliced-glass-card" style="top:14%;right:10%;bottom:10%;left:10%;">
-              <div class="glass-slice" style="--t:0%;--h:14.3%;--b:8px;--a:0.05"></div>
-              <div class="glass-slice" style="--t:14.3%;--h:14.3%;--b:18px;--a:0.07"></div>
-              <div class="glass-slice" style="--t:28.6%;--h:14.3%;--b:10px;--a:0.05"></div>
-              <div class="glass-slice" style="--t:42.9%;--h:14.3%;--b:22px;--a:0.06"></div>
-              <div class="glass-slice" style="--t:57.2%;--h:14.3%;--b:12px;--a:0.05"></div>
-              <div class="glass-slice" style="--t:71.5%;--h:14.3%;--b:18px;--a:0.06"></div>
-              <div class="glass-slice" style="--t:85.8%;--h:14.2%;--b:10px;--a:0.08"></div>
+            <!-- Sliced liquid glass card overlay (Kagool-style).
+                 Card stops at bottom: 30% so it sits above the Factuur
+                 floating card that pokes in from the bottom-left. -->
+            <div class="sliced-glass-card" style="top:9%;right:10%;bottom:30%;left:10%;">
+              <div class="glass-slice" style="--t:0%;--h:14.3%;--b:8px;--a:0.06"></div>
+              <div class="glass-slice" style="--t:14.3%;--h:14.3%;--b:20px;--a:0.09"></div>
+              <div class="glass-slice" style="--t:28.6%;--h:14.3%;--b:10px;--a:0.06"></div>
+              <div class="glass-slice" style="--t:42.9%;--h:14.3%;--b:24px;--a:0.08"></div>
+              <div class="glass-slice" style="--t:57.2%;--h:14.3%;--b:12px;--a:0.06"></div>
+              <div class="glass-slice" style="--t:71.5%;--h:14.3%;--b:20px;--a:0.08"></div>
+              <div class="glass-slice" style="--t:85.8%;--h:14.2%;--b:10px;--a:0.10"></div>
 
               <div class="glass-content">
                 <div class="flex items-center gap-2">
-                  <img src="assets/logo-light.png" alt="" class="w-7 h-7 opacity-90 mix-blend-multiply" />
+                  <img src="assets/logo-light.png" alt="" class="w-6 h-6 opacity-90 mix-blend-multiply" />
                   <span class="font-mono text-[9px] tracking-[0.22em] uppercase text-ink/60">Mentink op maat</span>
                 </div>
                 <div>
-                  <h4 class="font-display text-[28px] text-ink font-semibold tracking-tight leading-none">Job</h4>
-                  <p class="text-[11px] text-ink2/85 leading-snug mt-1.5 max-w-[28ch]">
-                    Persoonlijke boekhouding voor ondernemers — vast aanspreekpunt, eerlijke cijfers, op tijd ingediend.
+                  <h4 class="font-display text-[26px] text-ink font-semibold tracking-tight leading-none">Job</h4>
+                  <p class="text-[11px] text-ink2/85 leading-snug mt-1.5 max-w-[26ch]">
+                    Persoonlijke boekhouding — vast aanspreekpunt, eerlijke cijfers, op tijd ingediend.
                   </p>
                 </div>
               </div>
