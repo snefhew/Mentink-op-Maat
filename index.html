@@ -622,14 +622,22 @@
   ---------------------------------------------------------------------- */
   .scroll-dots {
     position: fixed;
-    right: 14px;
+    right: 6px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 40;
     pointer-events: auto;
   }
   @media (min-width: 768px) {
-    .scroll-dots { right: 22px; }
+    /* push closer to the viewport edge so the pill never overlaps service-card
+       arrows / rule lines / pricing-card right edges on the diensten + tarieven
+       sections (where content fills almost edge-to-edge on narrow desktops) */
+    .scroll-dots { right: 8px; }
+  }
+  @media (min-width: 1500px) {
+    /* once viewport is comfortably wider than max-w-[1400px] content,
+       give the pill a bit more breathing room */
+    .scroll-dots { right: 24px; }
   }
   /* Collapsed-by-default: just dots, no pill. Pill expands on
      :hover (desktop), :focus-within (keyboard), .is-touched (JS-toggled
