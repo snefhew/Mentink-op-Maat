@@ -339,6 +339,61 @@
     opacity: 0.32;
   }
 
+  /* ---------- SLICED LIQUID GLASS ----------
+     Community remix of Apple iOS 26 Liquid Glass: instead of one
+     SVG feDisplacementMap (Chrome-only), we stack horizontal
+     backdrop-blur slices with varying blur radii. Each slice
+     refracts its own stripe of the photo behind it; the seam
+     between stripes is a 1px white border that catches light.
+     Cross-browser (Chrome / Safari / Firefox).
+  ---------------------------------------------------------------- */
+  .sliced-glass-card {
+    position: absolute;
+    border-radius: 22px;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid rgba(255,255,255,0.32);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.55),
+      inset 0 -1px 0 rgba(0,0,0,0.06),
+      0 18px 40px -16px rgba(0,0,0,0.30);
+  }
+  .sliced-glass-card .glass-slice {
+    position: absolute; left: 0; right: 0;
+    top: var(--t); height: var(--h);
+    backdrop-filter: blur(var(--b)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--b)) saturate(150%);
+    background: rgba(255,255,255, var(--a, 0.04));
+    border-top: 1px solid rgba(255,255,255,0.10);
+    pointer-events: none;
+  }
+  .sliced-glass-card .glass-slice:first-of-type { border-top: 0; }
+  .sliced-glass-card .glass-content {
+    position: relative; z-index: 2;
+    height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 18px;
+  }
+  /* Dark variant — same slice technique but for the diensten
+     cinematic background. Each slice gets a dark tint instead
+     of white so text stays readable, and the venetian-blind
+     refraction is visible across the whole hero photo. */
+  .diensten-sliced {
+    position: absolute; inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .diensten-sliced .glass-slice {
+    position: absolute; left: 0; right: 0;
+    top: var(--t); height: var(--h);
+    backdrop-filter: blur(var(--b)) saturate(135%);
+    -webkit-backdrop-filter: blur(var(--b)) saturate(135%);
+    background: rgba(23,20,15, var(--d, 0.55));
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .diensten-sliced .glass-slice:first-of-type { border-top: 0; }
+
   /* ---------- HERO — full viewport (mobile-safe with svh) ---------- */
   .hero-section {
     min-height: 100svh;
@@ -365,8 +420,10 @@
   }
   .diensten-overlay {
     position: absolute; inset: 0;
+    /* lighter than before — sliced-glass adds its own per-stripe
+       darkening, so we just need a base wash for text contrast */
     background:
-      linear-gradient(180deg, rgba(23,20,15,0.88) 0%, rgba(23,20,15,0.70) 30%, rgba(23,20,15,0.70) 70%, rgba(23,20,15,0.92) 100%),
+      linear-gradient(180deg, rgba(23,20,15,0.55) 0%, rgba(23,20,15,0.30) 30%, rgba(23,20,15,0.30) 70%, rgba(23,20,15,0.65) 100%),
       radial-gradient(120% 80% at 70% 30%, rgba(204,74,29,0.10), transparent 60%);
     z-index: -1;
   }
@@ -751,6 +808,30 @@
               <rect x="58" y="175" width="48" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
               <rect x="58" y="184" width="36" height="6" rx="2" fill="#CC4A1D" opacity="0.7"/>
             </svg>
+
+            <!-- Sliced liquid glass card overlay (Kagool-style) -->
+            <div class="sliced-glass-card" style="top:14%;right:10%;bottom:10%;left:10%;">
+              <div class="glass-slice" style="--t:0%;--h:14.3%;--b:8px;--a:0.05"></div>
+              <div class="glass-slice" style="--t:14.3%;--h:14.3%;--b:18px;--a:0.07"></div>
+              <div class="glass-slice" style="--t:28.6%;--h:14.3%;--b:10px;--a:0.05"></div>
+              <div class="glass-slice" style="--t:42.9%;--h:14.3%;--b:22px;--a:0.06"></div>
+              <div class="glass-slice" style="--t:57.2%;--h:14.3%;--b:12px;--a:0.05"></div>
+              <div class="glass-slice" style="--t:71.5%;--h:14.3%;--b:18px;--a:0.06"></div>
+              <div class="glass-slice" style="--t:85.8%;--h:14.2%;--b:10px;--a:0.08"></div>
+
+              <div class="glass-content">
+                <div class="flex items-center gap-2">
+                  <img src="assets/logo-light.png" alt="" class="w-7 h-7 opacity-90 mix-blend-multiply" />
+                  <span class="font-mono text-[9px] tracking-[0.22em] uppercase text-ink/60">Mentink op maat</span>
+                </div>
+                <div>
+                  <h4 class="font-display text-[28px] text-ink font-semibold tracking-tight leading-none">Job</h4>
+                  <p class="text-[11px] text-ink2/85 leading-snug mt-1.5 max-w-[28ch]">
+                    Persoonlijke boekhouding voor ondernemers — vast aanspreekpunt, eerlijke cijfers, op tijd ingediend.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="glass-card float-a absolute top-6 -right-3 md:-right-8 w-[230px]">
@@ -795,6 +876,19 @@
 <section id="diensten" class="diensten-section snap-pane relative z-10" data-section data-theme="dark">
   <div class="diensten-bg"></div>
   <div class="diensten-overlay"></div>
+  <!-- Sliced liquid glass treatment over the cinematic bg —
+       8 horizontal stripes each refracting the photo at a slightly
+       different blur radius, creating the venetian-blind look. -->
+  <div class="diensten-sliced">
+    <div class="glass-slice" style="--t:0%;--h:12.5%;--b:8px;--d:0.55"></div>
+    <div class="glass-slice" style="--t:12.5%;--h:12.5%;--b:20px;--d:0.62"></div>
+    <div class="glass-slice" style="--t:25%;--h:12.5%;--b:10px;--d:0.55"></div>
+    <div class="glass-slice" style="--t:37.5%;--h:12.5%;--b:24px;--d:0.68"></div>
+    <div class="glass-slice" style="--t:50%;--h:12.5%;--b:12px;--d:0.58"></div>
+    <div class="glass-slice" style="--t:62.5%;--h:12.5%;--b:22px;--d:0.66"></div>
+    <div class="glass-slice" style="--t:75%;--h:12.5%;--b:10px;--d:0.62"></div>
+    <div class="glass-slice" style="--t:87.5%;--h:12.5%;--b:18px;--d:0.74"></div>
+  </div>
 
   <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-16 w-full">
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-5 md:mb-12">
