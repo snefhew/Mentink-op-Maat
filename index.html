@@ -184,71 +184,127 @@
     color: #7A6F5E;
   }
 
-  /* ---------- BUTTONS — 32px Mercury pills ---------- */
+  /* ---------- BUTTONS — unified glass pills (matches BTW/Factuur cards) ----
+     All pill buttons share the cream-glass aesthetic. Hover state varies:
+     primary → orange wash, ghost → ink wash. Each pill gets backdrop-blur,
+     soft inner highlight, and a floating drop-shadow so they read as glass
+     tiles instead of flat shapes. */
   .btn-primary {
-    background: var(--c-ink);
-    color: var(--c-cream);
+    display: inline-flex; align-items: center; gap: 10px;
     padding: 14px 22px;
     border-radius: 32px;
     font-weight: 500;
     letter-spacing: -0.01em;
-    display: inline-flex; align-items: center; gap: 10px;
-    transition:
-      transform var(--dur-base) var(--ease-out),
-      background var(--dur-base) var(--ease-out),
-      box-shadow var(--dur-base) var(--ease-out);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 16px -8px rgba(23,20,15,0.30);
-  }
-  .btn-primary:hover {
-    background: var(--c-orange);
-    transform: translateY(-1px);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.10) inset, 0 10px 22px -8px rgba(204,74,29,0.35);
-  }
-  .btn-primary:active { transform: translateY(0); transition-duration: var(--dur-fast); }
-  .btn-ghost {
     color: var(--c-ink);
-    padding: 14px 18px;
-    border-radius: 32px;
-    font-weight: 500;
-    border: 1px solid var(--c-ink);
-    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(251,249,242, 0.62);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255, 0.65);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255, 0.55),
+      0 8px 24px -10px rgba(23,20,15, 0.10);
     transition:
       background var(--dur-base) var(--ease-out),
       color var(--dur-base) var(--ease-out),
       border-color var(--dur-base) var(--ease-out),
-      transform var(--dur-base) var(--ease-out);
+      box-shadow var(--dur-base) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
   }
-  .btn-ghost:hover { background: var(--c-ink); color: var(--c-cream); border-color: var(--c-ink); transform: translateY(-1px); }
-  .btn-ghost:active { transform: translateY(0); transition-duration: var(--dur-fast); }
+  .btn-primary:hover {
+    background: rgba(204,74,29, 0.95);
+    border-color: rgba(204,74,29, 0.50);
+    color: var(--c-cream);
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255, 0.30),
+      0 12px 30px -10px rgba(204,74,29, 0.40);
+  }
+  .btn-primary:active { transform: translateY(0); }
 
-  /* ---------- NAV PILLS (eyecatching tasteful) ---------- */
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border-radius: 32px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--c-ink);
+    background: rgba(251,249,242, 0.42);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(255,255,255, 0.50);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255, 0.45),
+      0 6px 20px -10px rgba(23,20,15, 0.08);
+    transition:
+      background var(--dur-base) var(--ease-out),
+      color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .btn-ghost:hover {
+    background: rgba(23,20,15, 0.92);
+    border-color: rgba(23,20,15, 0.5);
+    color: var(--c-cream);
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255, 0.10),
+      0 12px 28px -10px rgba(23,20,15, 0.30);
+  }
+  .btn-ghost:active { transform: translateY(0); }
+
+  /* Dark-section glass pill — for contact section CTAs over ink bg */
+  .btn-glass-dark {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border-radius: 32px;
+    font-weight: 500;
+    color: var(--c-cream);
+    background: rgba(251,249,242, 0.10);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255, 0.20);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255, 0.10),
+      0 8px 24px -10px rgba(0,0,0, 0.30);
+    transition:
+      background var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .btn-glass-dark:hover {
+    background: rgba(204,74,29, 0.92);
+    border-color: rgba(204,74,29, 0.50);
+    transform: translateY(-1px);
+  }
+
+  /* ---------- NAV PILLS — same glass pill family, smaller ---------- */
   .nav-pill {
     position: relative;
+    display: inline-flex; align-items: center;
     padding: 8px 16px;
     border-radius: 999px;
     font-size: 14px;
     font-weight: 500;
     color: #3A332A;
-    transition: color .25s, background .25s;
+    background: rgba(251,249,242, 0.40);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid rgba(255,255,255, 0.45);
+    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.45);
+    transition:
+      background var(--dur-base) var(--ease-out),
+      color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
   }
-  .nav-pill::before {
-    content: "";
-    position: absolute; inset: 0;
-    border-radius: 999px;
-    background: var(--c-ink);
-    transform: scale(0.6);
-    opacity: 0;
-    transition: transform .35s cubic-bezier(.22,1,.36,1), opacity .25s;
-    z-index: -1;
+  .nav-pill:hover {
+    background: rgba(251,249,242, 0.72);
+    border-color: rgba(255,255,255, 0.7);
   }
-  .nav-pill:hover { color: var(--c-cream); }
-  .nav-pill:hover::before { transform: scale(1); opacity: 1; }
   .nav-pill.is-active {
-    color: var(--c-cream);
-  }
-  .nav-pill.is-active::before {
     background: var(--c-orange);
-    transform: scale(1); opacity: 1;
+    color: var(--c-cream);
+    border-color: rgba(204,74,29, 0.5);
   }
 
   /* ---------- ANNOUNCEMENT BAR ---------- */
@@ -339,63 +395,79 @@
     opacity: 0.32;
   }
 
-  /* ---------- SLICED LIQUID GLASS ----------
-     Community remix of Apple iOS 26 Liquid Glass: instead of one
-     SVG feDisplacementMap (Chrome-only), we stack horizontal
-     backdrop-blur slices with varying blur radii. Each slice
-     refracts its own stripe of the photo behind it; the seam
-     between stripes is a 1px white border that catches light.
-     Cross-browser (Chrome / Safari / Firefox).
-  ---------------------------------------------------------------- */
-  .sliced-glass-card {
-    position: absolute;
-    border-radius: 22px;
-    overflow: hidden;
-    isolation: isolate;
-    border: 1px solid rgba(255,255,255,0.32);
+  /* ---------- LIQUID GLASS ----------
+     Single-tile clean glassmorphism (no slices, no stripes).
+     Used for the hero info-tile, glass pills, and dark variants
+     for sections with dark backgrounds. */
+  .liquid-glass {
+    background: rgba(251,249,242, 0.55);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,255,255, 0.7);
+    border-radius: 28px;
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.55),
-      inset 0 -1px 0 rgba(0,0,0,0.06),
-      0 18px 40px -16px rgba(0,0,0,0.30);
+      inset 0 1px 0 rgba(255,255,255, 0.7),
+      inset 0 -1px 0 rgba(0,0,0, 0.04),
+      0 16px 36px -14px rgba(23,20,15, 0.14);
   }
-  .sliced-glass-card .glass-slice {
-    position: absolute; left: 0; right: 0;
-    top: var(--t); height: var(--h);
-    backdrop-filter: blur(var(--b)) saturate(160%);
-    -webkit-backdrop-filter: blur(var(--b)) saturate(160%);
-    background: rgba(255,255,255, var(--a, 0.04));
-    /* slightly stronger top-edge highlight makes the venetian
-       slice boundary visible against light cream backdrop */
-    border-top: 1px solid rgba(255,255,255,0.22);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
-    pointer-events: none;
+  .liquid-glass-dark {
+    background: rgba(23,20,15, 0.32);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255,255,255, 0.18);
+    border-radius: 28px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255, 0.08),
+      0 16px 36px -12px rgba(0,0,0, 0.40);
+    color: var(--c-cream);
   }
-  .sliced-glass-card .glass-slice:first-of-type { border-top: 0; }
-  .sliced-glass-card .glass-content {
-    position: relative; z-index: 2;
-    height: 100%;
-    display: flex; flex-direction: column;
-    justify-content: space-between;
-    padding: 16px 18px;
+
+  /* ---------- SECTION EYEBROW ----------
+     Italic № pill in orange + thin horizontal rule + mono label.
+     Replaces the plain text eyebrow for editorial sophistication. */
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
   }
-  /* Dark variant — same slice technique but for the diensten
-     cinematic background. Each slice gets a dark tint instead
-     of white so text stays readable, and the venetian-blind
-     refraction is visible across the whole hero photo. */
-  .diensten-sliced {
-    position: absolute; inset: 0;
-    z-index: -1;
-    pointer-events: none;
+  .section-eyebrow .se-num {
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--c-orange);
+    background: rgba(204,74,29, 0.08);
+    border: 1px solid rgba(204,74,29, 0.22);
+    border-radius: 999px;
+    padding: 4px 11px 5px;
+    letter-spacing: -0.02em;
   }
-  .diensten-sliced .glass-slice {
-    position: absolute; left: 0; right: 0;
-    top: var(--t); height: var(--h);
-    backdrop-filter: blur(var(--b)) saturate(135%);
-    -webkit-backdrop-filter: blur(var(--b)) saturate(135%);
-    background: rgba(23,20,15, var(--d, 0.55));
-    border-top: 1px solid rgba(255,255,255,0.06);
+  .section-eyebrow .se-line {
+    flex: 0 0 30px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.28;
   }
-  .diensten-sliced .glass-slice:first-of-type { border-top: 0; }
+  .section-eyebrow .se-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--c-mute);
+  }
+  /* Dark variant — over diensten / werkwijze / contact backgrounds */
+  [data-theme="dark"] .section-eyebrow .se-num {
+    color: #E9A76A;
+    background: rgba(233,167,106, 0.10);
+    border-color: rgba(233,167,106, 0.28);
+  }
+  [data-theme="dark"] .section-eyebrow .se-label {
+    color: rgba(251,249,242, 0.55);
+  }
+  [data-theme="dark"] .section-eyebrow .se-line {
+    background: rgba(251,249,242, 0.45);
+  }
 
   /* ---------- HERO — full viewport (mobile-safe with svh) ---------- */
   .hero-section {
@@ -423,10 +495,8 @@
   }
   .diensten-overlay {
     position: absolute; inset: 0;
-    /* lighter than before — sliced-glass adds its own per-stripe
-       darkening, so we just need a base wash for text contrast */
     background:
-      linear-gradient(180deg, rgba(23,20,15,0.55) 0%, rgba(23,20,15,0.30) 30%, rgba(23,20,15,0.30) 70%, rgba(23,20,15,0.65) 100%),
+      linear-gradient(180deg, rgba(23,20,15,0.86) 0%, rgba(23,20,15,0.68) 30%, rgba(23,20,15,0.68) 70%, rgba(23,20,15,0.92) 100%),
       radial-gradient(120% 80% at 70% 30%, rgba(204,74,29,0.10), transparent 60%);
     z-index: -1;
   }
@@ -763,11 +833,11 @@
       <!-- LEFT -->
       <div class="col-span-12 lg:col-span-7">
         <div class="flex flex-wrap items-center gap-4 mb-5 reveal" style="animation-delay:.05s">
-          <p class="eyebrow">№ 01 &nbsp;·&nbsp; Boekhouding</p>
-          <span class="status-pill">
-            <span class="dot"></span>
-            3 plekken vrij · Q2
-          </span>
+          <p class="section-eyebrow">
+            <span class="se-num">01</span>
+            <span class="se-line"></span>
+            <span class="se-label">Boekhouding</span>
+          </p>
         </div>
 
         <h1 class="display-huge text-[44px] sm:text-[60px] md:text-[80px] lg:text-[112px] xl:text-[136px] reveal" style="animation-delay:.15s">
@@ -800,7 +870,7 @@
           <p class="photo-slot-caption">Job achter de laptop</p>
 
           <!-- TODO: vervang door echte foto van Job (4:5 portrait, warm licht) -->
-          <div class="photo-slot">
+          <div class="photo-slot relative z-[2]">
             <svg class="photo-slot__art" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <circle cx="100" cy="60" r="22" fill="currentColor"/>
               <path d="M55 130 Q 100 100 145 130 L 152 175 L 48 175 Z" fill="currentColor"/>
@@ -811,35 +881,24 @@
               <rect x="58" y="175" width="48" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
               <rect x="58" y="184" width="36" height="6" rx="2" fill="#CC4A1D" opacity="0.7"/>
             </svg>
-
-            <!-- Sliced liquid glass card overlay (Kagool-style).
-                 Card stops at bottom: 30% so it sits above the Factuur
-                 floating card that pokes in from the bottom-left. -->
-            <div class="sliced-glass-card" style="top:9%;right:10%;bottom:30%;left:10%;">
-              <div class="glass-slice" style="--t:0%;--h:14.3%;--b:8px;--a:0.06"></div>
-              <div class="glass-slice" style="--t:14.3%;--h:14.3%;--b:20px;--a:0.09"></div>
-              <div class="glass-slice" style="--t:28.6%;--h:14.3%;--b:10px;--a:0.06"></div>
-              <div class="glass-slice" style="--t:42.9%;--h:14.3%;--b:24px;--a:0.08"></div>
-              <div class="glass-slice" style="--t:57.2%;--h:14.3%;--b:12px;--a:0.06"></div>
-              <div class="glass-slice" style="--t:71.5%;--h:14.3%;--b:20px;--a:0.08"></div>
-              <div class="glass-slice" style="--t:85.8%;--h:14.2%;--b:10px;--a:0.10"></div>
-
-              <div class="glass-content">
-                <div class="flex items-center gap-2">
-                  <img src="assets/logo-light.png" alt="" class="w-6 h-6 opacity-90 mix-blend-multiply" />
-                  <span class="font-mono text-[9px] tracking-[0.22em] uppercase text-ink/60">Mentink op maat</span>
-                </div>
-                <div>
-                  <h4 class="font-display text-[26px] text-ink font-semibold tracking-tight leading-none">Job</h4>
-                  <p class="text-[11px] text-ink2/85 leading-snug mt-1.5 max-w-[26ch]">
-                    Persoonlijke boekhouding — vast aanspreekpunt, eerlijke cijfers, op tijd ingediend.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div class="glass-card float-a absolute top-6 -right-3 md:-right-8 w-[230px]">
+          <!-- Glass info-tile: sits BEHIND the photo (z-1), peeks up via
+               negative margin so the photo overlaps its top portion. The
+               brand+name+tagline live in the visible bottom portion. -->
+          <div class="liquid-glass relative z-[1] -mt-12 mx-auto w-[88%] pt-16 px-6 pb-5">
+            <div class="flex items-center gap-2 mb-2.5">
+              <img src="assets/logo-light.png" alt="" class="w-5 h-5 opacity-90" />
+              <span class="font-mono text-[9px] tracking-[0.24em] uppercase text-mute">Mentink op maat</span>
+            </div>
+            <h4 class="font-display text-[28px] text-ink font-semibold tracking-tight leading-none">Job</h4>
+            <p class="text-[12px] text-ink2 leading-snug mt-2 max-w-[34ch]">
+              Persoonlijke boekhouding — vast aanspreekpunt, eerlijke cijfers, op tijd ingediend.
+            </p>
+          </div>
+
+          <!-- BTW floating tile (top-right of photo) -->
+          <div class="glass-card float-a absolute top-6 -right-3 md:-right-8 w-[230px] z-[3]">
             <div class="flex items-start gap-3">
               <div class="w-9 h-9 rounded-full bg-logoGreen/10 flex items-center justify-center shrink-0">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -854,7 +913,9 @@
             </div>
           </div>
 
-          <div class="glass-card float-b absolute -bottom-5 -left-3 md:-left-10 w-[260px]">
+          <!-- Factuur floating tile, anchored to photo-slot bottom edge so
+               the photo + glass info-tile composition stays clean -->
+          <div class="glass-card float-b absolute top-[58%] -left-3 md:-left-10 w-[260px] z-[3]">
             <div class="flex items-center justify-between mb-2">
               <p class="font-mono text-[10px] tracking-widest uppercase text-mute">Factuur · 2026-014</p>
               <span class="font-mono text-[10px] tracking-widest uppercase text-orange">Betaald</span>
@@ -881,24 +942,15 @@
 <section id="diensten" class="diensten-section snap-pane relative z-10" data-section data-theme="dark">
   <div class="diensten-bg"></div>
   <div class="diensten-overlay"></div>
-  <!-- Sliced liquid glass treatment over the cinematic bg —
-       8 horizontal stripes each refracting the photo at a slightly
-       different blur radius, creating the venetian-blind look. -->
-  <div class="diensten-sliced">
-    <div class="glass-slice" style="--t:0%;--h:12.5%;--b:8px;--d:0.55"></div>
-    <div class="glass-slice" style="--t:12.5%;--h:12.5%;--b:20px;--d:0.62"></div>
-    <div class="glass-slice" style="--t:25%;--h:12.5%;--b:10px;--d:0.55"></div>
-    <div class="glass-slice" style="--t:37.5%;--h:12.5%;--b:24px;--d:0.68"></div>
-    <div class="glass-slice" style="--t:50%;--h:12.5%;--b:12px;--d:0.58"></div>
-    <div class="glass-slice" style="--t:62.5%;--h:12.5%;--b:22px;--d:0.66"></div>
-    <div class="glass-slice" style="--t:75%;--h:12.5%;--b:10px;--d:0.62"></div>
-    <div class="glass-slice" style="--t:87.5%;--h:12.5%;--b:18px;--d:0.74"></div>
-  </div>
 
   <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-16 w-full">
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-5 md:mb-12">
       <div class="col-span-12 md:col-span-4">
-        <p class="eyebrow mb-2 md:mb-3 scroll-reveal">№ 02 &nbsp;·&nbsp; Wat ik doe</p>
+        <p class="section-eyebrow mb-2 md:mb-3 scroll-reveal">
+          <span class="se-num">02</span>
+          <span class="se-line"></span>
+          <span class="se-label">Wat ik doe</span>
+        </p>
         <h2 class="font-display text-[30px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-semibold text-cream">
           Vier diensten,<br>
           <span class="italic-swash" style="color:#E9A76A">één</span> aanspreekpunt.
@@ -984,7 +1036,11 @@
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-20 relative w-full">
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-5 md:mb-14">
       <div class="col-span-12 md:col-span-5">
-        <p class="eyebrow mb-2 md:mb-4 scroll-reveal" style="color:#C5B896">№ 03 &nbsp;·&nbsp; Werkwijze</p>
+        <p class="section-eyebrow mb-2 md:mb-4 scroll-reveal">
+          <span class="se-num">03</span>
+          <span class="se-line"></span>
+          <span class="se-label">Werkwijze</span>
+        </p>
         <h2 class="font-display text-[28px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-semibold">
           In <span style="color:#E9A76A" class="font-display italic">drie</span> stappen<br>over.
         </h2>
@@ -1030,7 +1086,11 @@
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-6 md:py-20 w-full">
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-3 md:mb-12">
       <div class="col-span-12 md:col-span-5">
-        <p class="eyebrow mb-2 md:mb-3 scroll-reveal">№ 04 &nbsp;·&nbsp; Tarieven</p>
+        <p class="section-eyebrow mb-2 md:mb-3 scroll-reveal">
+          <span class="se-num">04</span>
+          <span class="se-line"></span>
+          <span class="se-label">Tarieven</span>
+        </p>
         <h2 class="font-display text-[28px] sm:text-[40px] md:text-[60px] leading-[0.95] tracking-tight scroll-reveal font-semibold">
           Vaste prijs.<br>
           <span class="italic-swash">Geen</span> verrassingen.
@@ -1086,7 +1146,7 @@
           <li class="flex gap-3"><span class="price-accent mt-1">●</span> Bonnen scannen via de app</li>
           <li class="hidden md:flex gap-3 text-cream/50"><span class="mt-1">○</span> Inkomstenbelasting (los bij te boeken)</li>
         </ul>
-        <a href="#contact" class="mt-2 md:mt-10 inline-flex justify-center items-center gap-2 bg-cream text-ink rounded-[32px] py-3.5 px-5 font-medium hover:bg-orange hover:text-cream transition-colors">
+        <a href="#contact" class="btn-glass-dark mt-2 md:mt-10 justify-center">
           Kies Standaard
           <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
         </a>
@@ -1144,7 +1204,11 @@ END HIDDEN-FOR-LATER:testimonial -->
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-20 w-full">
     <div class="grid grid-cols-12 gap-6 md:gap-10">
       <div class="col-span-12 md:col-span-4">
-        <p class="eyebrow mb-5 scroll-reveal">№ 05 &nbsp;·&nbsp; Veelgestelde vragen</p>
+        <p class="section-eyebrow mb-5 scroll-reveal">
+          <span class="se-num">05</span>
+          <span class="se-line"></span>
+          <span class="se-label">Veelgestelde vragen</span>
+        </p>
         <h2 class="font-display text-[34px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-medium">Antwoorden,<br><span class="italic-swash">eerlijk.</span></h2>
         <p class="mt-8 text-[16px] text-ink2 scroll-reveal">
           Staat jouw vraag er niet tussen? Bel of mail gerust: <a href="tel:+31628215898" class="link-under">06 2821 5898</a>.
@@ -1224,7 +1288,10 @@ END HIDDEN-FOR-LATER:testimonial -->
 
     <div class="relative grid grid-cols-12 gap-4 md:gap-10">
       <div class="col-span-12 md:col-span-8">
-        <p class="eyebrow mb-3 md:mb-6 scroll-reveal" style="color:#C5B896">Laten we kennismaken</p>
+        <p class="section-eyebrow mb-3 md:mb-6 scroll-reveal">
+          <span class="se-line"></span>
+          <span class="se-label">Laten we kennismaken</span>
+        </p>
         <h2 class="font-display text-[32px] sm:text-[52px] md:text-[72px] lg:text-[96px] leading-[0.94] tracking-tight scroll-reveal font-medium">
           Klaar voor<br>
           <span style="color:#E9A76A" class="italic-swash">heldere cijfers?</span>
@@ -1234,11 +1301,11 @@ END HIDDEN-FOR-LATER:testimonial -->
         </p>
 
         <div class="mt-4 md:mt-10 flex flex-wrap gap-2 md:gap-3 scroll-reveal">
-          <a href="mailto:Job@mentinkopmaat.nl" class="inline-flex items-center gap-2 bg-cream text-ink rounded-[32px] py-2 md:py-4 px-4 md:px-6 font-medium text-[13px] md:text-base hover:bg-orange hover:text-cream transition-colors">
+          <a href="mailto:Job@mentinkopmaat.nl" class="btn-glass-dark text-[13px] md:text-base">
             Job@mentinkopmaat.nl
             <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
           </a>
-          <a href="tel:+31628215898" class="inline-flex items-center gap-2 border border-cream/40 rounded-[32px] py-2 md:py-4 px-4 md:px-6 font-medium text-[13px] md:text-base hover:bg-cream/10 transition-colors">
+          <a href="tel:+31628215898" class="btn-glass-dark text-[13px] md:text-base">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 10.5v1.5a1 1 0 0 1-1 1A9 9 0 0 1 2 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 1 .75l.5 2a1 1 0 0 1-.25 1l-.9.9a7 7 0 0 0 3.5 3.5l.9-.9a1 1 0 0 1 1-.25l2 .5a1 1 0 0 1 .75 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
             06 2821 5898
           </a>
