@@ -502,17 +502,39 @@
   .diensten-section .rule-bottom { border-bottom-color: rgba(251,249,242,0.18); }
   .diensten-section .svc-arrow { border-color: rgba(251,249,242,0.55); color: var(--c-cream); }
 
-  /* service card hover (works on dark bg) */
+  /* Service card hover — restrained Superhuman/Mercury treatment.
+     Replaces the previous radial "headlight" glow with three coordinated
+     micro-cues: (1) barely-perceptible cream wash on the row, (2) 1px
+     orange accent line that draws left→right over the rule-bottom, and
+     (3) warm-amber tint on the leading mono number. The arrow keeps its
+     existing translate + orange recolour. */
   .svc-card {
-    transition: background .35s cubic-bezier(.22,1,.36,1), color .35s;
-    position: relative; overflow: hidden;
+    position: relative;
+    overflow: hidden;
+    transition: background .25s var(--ease-out);
+  }
+  .svc-card:hover {
+    background: rgba(251, 249, 242, 0.03);
   }
   .svc-card::after {
-    content: ""; position: absolute; inset: 0;
-    background: radial-gradient(600px 200px at var(--mx,50%) var(--my,0%), rgba(204,74,29,0.22), transparent 60%);
-    opacity: 0; transition: opacity .3s; pointer-events: none;
+    content: "";
+    position: absolute;
+    left: 0; bottom: -1px;
+    height: 1px;
+    width: 0;
+    background: var(--c-orange);
+    transition: width .55s cubic-bezier(.22,1,.36,1);
+    pointer-events: none;
+    z-index: 2;
   }
-  .svc-card:hover::after { opacity: 1; }
+  .svc-card:hover::after { width: 100%; }
+  /* Mono number ("01" / "02" / …) warms to amber on hover */
+  .svc-card > span.font-mono {
+    transition: color .25s var(--ease-out);
+  }
+  .svc-card:hover > span.font-mono {
+    color: #E9A76A;
+  }
   .svc-card:hover .svc-arrow { transform: translate(4px,-4px); border-color: var(--c-orange); color: var(--c-orange); }
   .svc-arrow { transition: transform .3s, color .3s, border-color .3s; }
 
@@ -1437,21 +1459,11 @@ END HIDDEN-FOR-LATER:testimonial -->
   }
 
   // ----------------------------------------------------------------
-  // Service-card spotlight cursor (unchanged)
+  // (Removed: service-card spotlight-cursor JS — the radial-gradient
+  // hover glow it powered was replaced by a restrained Superhuman-style
+  // 1px orange accent line + cream wash + amber number tint, all CSS.)
   // ----------------------------------------------------------------
-  document.querySelectorAll('[data-svc]').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.removeProperty('--mx');
-      card.style.removeProperty('--my');
-    });
-  });
 
-  // ----------------------------------------------------------------
   // Scroll-reveal (unchanged)
   // ----------------------------------------------------------------
   const reveal = new IntersectionObserver((entries) => {
