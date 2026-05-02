@@ -1,11 +1,42 @@
 <!doctype html>
-<html lang="nl">
+<html lang="nl-NL">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mentink op maat · Boekhouding voor ZZP'ers en MKB</title>
-<meta name="description" content="Mentink op maat verzorgt jouw administratie, BTW-aangifte en boekhouding. Vaste maandprijs vanaf €50, of per uur. Voor ZZP'ers en kleine ondernemers in Nederland." />
+<title>Mentink op maat — Boekhouding voor ZZP'ers &amp; MKB · vanaf €50/mnd</title>
+<meta name="description" content="Persoonlijke boekhouding, BTW-aangifte en advies door één vast aanspreekpunt. Vaste maandprijs vanaf €50 of €40 per uur — voor ZZP'ers en kleine ondernemers in Nederland." />
+<meta name="author" content="Mentink op maat" />
+<meta name="theme-color" content="#FBF9F2" />
+<link rel="canonical" href="https://snefhew.github.io/Mentink-op-Maat/" />
 <link rel="icon" type="image/png" href="assets/logo-light.png" />
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="nl_NL" />
+<meta property="og:site_name" content="Mentink op maat" />
+<meta property="og:title" content="Mentink op maat — Boekhouding op maat voor ZZP'ers &amp; MKB" />
+<meta property="og:description" content="Persoonlijke boekhouding, BTW-aangifte en advies door één vast aanspreekpunt. Vaste maandprijs vanaf €50 of €40 per uur." />
+<meta property="og:url" content="https://snefhew.github.io/Mentink-op-Maat/" />
+<meta property="og:image" content="https://snefhew.github.io/Mentink-op-Maat/assets/logo-light.png" />
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Mentink op maat — Boekhouding op maat" />
+<meta name="twitter:description" content="Persoonlijke boekhouding voor ZZP'ers en MKB. Vaste maandprijs vanaf €50." />
+<!-- Structured data: LocalBusiness -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AccountingService",
+  "name": "Mentink op maat",
+  "description": "Persoonlijke boekhouding, BTW-aangifte en financieel advies voor ZZP'ers en MKB in Nederland.",
+  "url": "https://snefhew.github.io/Mentink-op-Maat/",
+  "telephone": "+31628215898",
+  "email": "Job@mentinkopmaat.nl",
+  "areaServed": "NL",
+  "priceRange": "€€",
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "Cash, Credit Card, Bank Transfer"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -60,6 +91,12 @@
   .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
   .lenis.lenis-stopped { overflow: hidden; }
   .lenis.lenis-smooth iframe { pointer-events: none; }
+
+  /* Anchor jumps from outside Lenis (e.g. focus restoration after tab switch,
+     deep-link from email) shouldn't tuck the section title under the absolute
+     header. Lenis manages its own scrollTo so this only kicks in for native
+     anchor jumps; harmless otherwise. */
+  [data-section] { scroll-margin-top: 110px; }
 
   body {
     background: var(--c-cream);
@@ -309,30 +346,6 @@
 
   /* ---------- ANNOUNCEMENT BAR ---------- */
   .announcement-bar { background: var(--c-ink); color: var(--c-cream); }
-
-  /* ---------- STATUS PILL (Hyperstudio "spots-left") ---------- */
-  .status-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: #1E5A38; color: var(--c-cream);
-    padding: 6px 14px; border-radius: 999px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 0.18em;
-    text-transform: uppercase; font-weight: 500;
-  }
-  .status-pill .dot {
-    width: 6px; height: 6px;
-    background: #4ADE80; border-radius: 999px;
-    box-shadow: 0 0 0 0 rgba(74,222,128,0.7);
-    /* slower, gentler breath — easeInOut so the ring fades in/out symmetrically.
-       Old config used .66,0,0,1 which snapped hard at the start; this site is
-       calm so a calm pulse fits the tone. */
-    animation: pulse 3s cubic-bezier(.4,0,.2,1) infinite;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.55); }
-    60%  { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
-    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
-  }
 
   /* ---------- GLASS CARD (Superhuman floating panel — 12px small) ---------- */
   .glass-card {
@@ -585,6 +598,15 @@
   .faq-plus::after { height: 2px; top: 6px; }
   details[open] .faq-plus::before,
   details[open] .faq-plus::after { background: var(--c-orange); }
+  /* Soft fade-in for FAQ answer body so the disclosure feels intentional,
+     not a hard pop. Only animates opacity (no layout) so reflow stays cheap. */
+  details[open] > p {
+    animation: faqReveal var(--dur-base) var(--ease-out) both;
+  }
+  @keyframes faqReveal {
+    from { opacity: 0; transform: translateY(-2px); }
+    to   { opacity: 1; transform: none; }
+  }
 
   /* reveal-on-load stagger */
   .reveal { opacity: 0; transform: translateY(18px); animation: reveal .9s cubic-bezier(.22,1,.36,1) forwards; }
@@ -629,6 +651,31 @@
   }
 
   ::selection { background: var(--c-orange); color: var(--c-cream); }
+
+  /* Footer + dark-section link hover — uniform color transition so hover doesn't
+     snap. Tailwind's hover:text-cream change is otherwise instant. */
+  #footer a, .announcement-bar a {
+    transition: color var(--dur-base) var(--ease-out);
+  }
+
+  /* Skip-to-content — hidden offscreen until keyboard-focused. WCAG 2.4.1 */
+  .sr-skip {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 100;
+    padding: 10px 14px;
+    background: var(--c-ink);
+    color: var(--c-cream);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transform: translateY(-200%);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .sr-skip:focus { transform: translateY(0); }
 
   .logo-mark {
     width: 36px; height: 36px;
@@ -791,11 +838,13 @@
       transition-duration: 0.01ms !important;
     }
     .reveal, .scroll-reveal, .float-a, .float-b { opacity: 1 !important; transform: none !important; }
-    .status-pill .dot { animation: none; }
   }
 </style>
 </head>
 <body class="relative">
+
+<!-- Skip-to-content (SR + keyboard users) — invisible until focused -->
+<a href="#main" class="sr-skip">Direct naar inhoud</a>
 
 <!-- ============ HEADER (announcement + nav combined; absolute overlay over hero) ============ -->
 <header class="site-header" id="site-header">
@@ -819,7 +868,7 @@
       <span class="font-display text-[20px] font-semibold tracking-tight">Mentink op maat</span>
     </a>
 
-    <nav class="nav-island hidden md:inline-flex text-[14px]" id="nav-links">
+    <nav class="nav-island hidden md:inline-flex text-[14px]" id="nav-links" aria-label="Hoofdnavigatie">
       <a href="#diensten"  class="nav-pill">Diensten</a>
       <a href="#werkwijze" class="nav-pill">Werkwijze</a>
       <a href="#tarieven"  class="nav-pill">Tarieven</a>
@@ -847,6 +896,9 @@
     <li><a href="#contact"   data-target="contact"><span class="label">Contact</span><span class="dot"></span></a></li>
   </ul>
 </nav>
+
+<!-- ============ MAIN ============ -->
+<main id="main">
 
 <!-- ============ HERO ============ -->
 <section id="hero" class="hero-section relative z-10 overflow-hidden" data-section data-theme="light">
@@ -1234,7 +1286,7 @@ END HIDDEN-FOR-LATER:testimonial -->
           <span class="se-line"></span>
           <span class="se-label">Veelgestelde vragen</span>
         </p>
-        <h2 class="font-display text-[34px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-medium">Antwoorden,<br><span class="italic-swash">eerlijk.</span></h2>
+        <h2 class="font-display text-[34px] sm:text-[40px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-semibold">Antwoorden,<br><span class="italic-swash">eerlijk.</span></h2>
         <p class="mt-8 text-[16px] text-ink2 scroll-reveal">
           Staat jouw vraag er niet tussen? Bel of mail gerust: <a href="tel:+31628215898" class="link-under">06 2821 5898</a>.
         </p>
@@ -1314,10 +1366,11 @@ END HIDDEN-FOR-LATER:testimonial -->
     <div class="relative grid grid-cols-12 gap-4 md:gap-10">
       <div class="col-span-12 md:col-span-8">
         <p class="section-eyebrow mb-3 md:mb-6 scroll-reveal">
+          <span class="se-num">06</span>
           <span class="se-line"></span>
           <span class="se-label">Laten we kennismaken</span>
         </p>
-        <h2 class="font-display text-[32px] sm:text-[52px] md:text-[72px] lg:text-[96px] leading-[0.94] tracking-tight scroll-reveal font-medium">
+        <h2 class="font-display text-[32px] sm:text-[52px] md:text-[72px] lg:text-[96px] leading-[0.94] tracking-tight scroll-reveal font-semibold">
           Klaar voor<br>
           <span style="color:#E9A76A" class="italic-swash">heldere cijfers?</span>
         </h2>
@@ -1353,6 +1406,8 @@ END HIDDEN-FOR-LATER:testimonial -->
     </div>
   </div>
 </section>
+
+</main>
 
 <!-- ============ FOOTER ============ -->
 <footer class="bg-ink text-cream/70 rule-top border-cream/15" id="footer">
@@ -1395,7 +1450,7 @@ END HIDDEN-FOR-LATER:testimonial -->
     </div>
     <div class="mt-12 pt-6 border-t border-cream/15 flex flex-wrap justify-between gap-4 text-[12px] font-mono text-cream/50 uppercase tracking-widest">
       <!-- TODO: vul KvK + BTW-nummer in zodra geregistreerd -->
-      <p>© 2026 Mentink op maat &middot; KvK [TBD] &middot; BTW [TBD]</p>
+      <p>© 2026 Mentink op maat &middot; Inschrijving KvK in behandeling</p>
       <p>Boekhouding op maat</p>
     </div>
   </div>
