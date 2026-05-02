@@ -184,25 +184,24 @@
     color: #7A6F5E;
   }
 
-  /* ---------- BUTTONS — unified glass pills (matches BTW/Factuur cards) ----
-     All pill buttons share the cream-glass aesthetic. Hover state varies:
-     primary → orange wash, ghost → ink wash. Each pill gets backdrop-blur,
-     soft inner highlight, and a floating drop-shadow so they read as glass
-     tiles instead of flat shapes. */
+  /* ---------- BUTTONS — Superhuman-style 4px glass tiles ----
+     Sharp 4px corners (per user spec, override Superhuman's 8px default).
+     Glass surface with backdrop-blur. Depth via inset highlight only —
+     no heavy drop-shadow (per Superhuman: "depth via overlap + backdrop-blur,
+     no box-shadow elevation"). Hover varies: primary → orange wash,
+     ghost → ink wash. */
   .btn-primary {
     display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 22px;
-    border-radius: 32px;
-    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-weight: 540;
     letter-spacing: -0.01em;
     color: var(--c-ink);
-    background: rgba(251,249,242, 0.62);
+    background: rgba(251,249,242, 0.72);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
     backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255,255,255, 0.65);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255, 0.55),
-      0 8px 24px -10px rgba(23,20,15, 0.10);
+    border: 1px solid rgba(23,20,15, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.55);
     transition:
       background var(--dur-base) var(--ease-out),
       color var(--dur-base) var(--ease-out),
@@ -211,30 +210,26 @@
       transform var(--dur-fast) var(--ease-out);
   }
   .btn-primary:hover {
-    background: rgba(204,74,29, 0.95);
-    border-color: rgba(204,74,29, 0.50);
+    background: var(--c-orange);
+    border-color: var(--c-orange);
     color: var(--c-cream);
     transform: translateY(-1px);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255, 0.30),
-      0 12px 30px -10px rgba(204,74,29, 0.40);
+    box-shadow: inset 0 0 0 1px rgba(204,74,29, 0.6);
   }
   .btn-primary:active { transform: translateY(0); }
 
   .btn-ghost {
     display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 22px;
-    border-radius: 32px;
-    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-weight: 540;
     letter-spacing: -0.01em;
     color: var(--c-ink);
     background: rgba(251,249,242, 0.42);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid rgba(255,255,255, 0.50);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255, 0.45),
-      0 6px 20px -10px rgba(23,20,15, 0.08);
+    border: 1px solid rgba(23,20,15, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.45);
     transition:
       background var(--dur-base) var(--ease-out),
       color var(--dur-base) var(--ease-out),
@@ -243,68 +238,73 @@
       transform var(--dur-fast) var(--ease-out);
   }
   .btn-ghost:hover {
-    background: rgba(23,20,15, 0.92);
-    border-color: rgba(23,20,15, 0.5);
+    background: var(--c-ink);
+    border-color: var(--c-ink);
     color: var(--c-cream);
     transform: translateY(-1px);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255, 0.10),
-      0 12px 28px -10px rgba(23,20,15, 0.30);
   }
   .btn-ghost:active { transform: translateY(0); }
 
-  /* Dark-section glass pill — for contact section CTAs over ink bg */
+  /* Dark-section glass — for contact section CTAs over ink bg */
   .btn-glass-dark {
     display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 22px;
-    border-radius: 32px;
-    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-weight: 540;
     color: var(--c-cream);
     background: rgba(251,249,242, 0.10);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
     backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255,255,255, 0.20);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255, 0.10),
-      0 8px 24px -10px rgba(0,0,0, 0.30);
+    border: 1px solid rgba(255,255,255, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.10);
     transition:
       background var(--dur-base) var(--ease-out),
       border-color var(--dur-base) var(--ease-out),
       transform var(--dur-fast) var(--ease-out);
   }
   .btn-glass-dark:hover {
-    background: rgba(204,74,29, 0.92);
-    border-color: rgba(204,74,29, 0.50);
+    background: var(--c-orange);
+    border-color: var(--c-orange);
     transform: translateY(-1px);
   }
 
-  /* ---------- NAV PILLS — same glass pill family, smaller ---------- */
+  /* ---------- NAV ISLAND — single floating pill container holding the
+     nav-links. 50.496px radius per user spec. Linear / Superhuman style. */
+  .nav-island {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 50.496px;
+    background: rgba(251,249,242, 0.55);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid rgba(23,20,15, 0.10);
+    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.55);
+  }
+
+  /* Individual nav links inside the island — 8px sharp tabs */
   .nav-pill {
     position: relative;
     display: inline-flex; align-items: center;
-    padding: 8px 16px;
-    border-radius: 999px;
+    padding: 8px 14px;
+    border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
     color: #3A332A;
-    background: rgba(251,249,242, 0.40);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    backdrop-filter: blur(12px) saturate(140%);
-    border: 1px solid rgba(255,255,255, 0.45);
-    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.45);
+    background: transparent;
+    border: 1px solid transparent;
     transition:
       background var(--dur-base) var(--ease-out),
       color var(--dur-base) var(--ease-out),
       border-color var(--dur-base) var(--ease-out);
   }
   .nav-pill:hover {
-    background: rgba(251,249,242, 0.72);
-    border-color: rgba(255,255,255, 0.7);
+    background: rgba(23,20,15, 0.06);
   }
   .nav-pill.is-active {
     background: var(--c-orange);
     color: var(--c-cream);
-    border-color: rgba(204,74,29, 0.5);
   }
 
   /* ---------- ANNOUNCEMENT BAR ---------- */
@@ -334,14 +334,14 @@
     100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
   }
 
-  /* ---------- GLASS CARD (Superhuman floating panel) ---------- */
+  /* ---------- GLASS CARD (Superhuman floating panel — 12px small) ---------- */
   .glass-card {
     background: rgba(251,249,242,0.62);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255,255,255,0.65);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 12px 32px -10px rgba(23,20,15,0.10);
-    border-radius: 28px;
+    border: 1px solid rgba(23,20,15,0.10);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
+    border-radius: 12px;
     padding: 16px 18px;
   }
   /* on dark bg variant */
@@ -350,8 +350,8 @@
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid rgba(255,255,255,0.18);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 12px 32px -10px rgba(0,0,0,0.4);
-    border-radius: 28px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset;
+    border-radius: 12px;
     color: var(--c-cream);
   }
 
@@ -376,12 +376,12 @@
   .photo-slot {
     position: relative;
     aspect-ratio: 4 / 5;
-    border-radius: 28px;
+    border-radius: 24px;
     overflow: hidden;
     background:
       radial-gradient(120% 80% at 30% 20%, rgba(204,74,29,0.10), transparent 55%),
       linear-gradient(170deg, #F1E7CF 0%, #E2D4B2 60%, #C9B98F 100%);
-    border: 1px solid rgba(23,20,15,0.06);
+    border: 1px solid rgba(23,20,15,0.10);
   }
   .photo-slot::before {
     content: "";
@@ -403,22 +403,17 @@
     background: rgba(251,249,242, 0.55);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid rgba(255,255,255, 0.7);
-    border-radius: 28px;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255, 0.7),
-      inset 0 -1px 0 rgba(0,0,0, 0.04),
-      0 16px 36px -14px rgba(23,20,15, 0.14);
+    border: 1px solid rgba(23,20,15, 0.10);
+    border-radius: 24px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.7);
   }
   .liquid-glass-dark {
     background: rgba(23,20,15, 0.32);
     -webkit-backdrop-filter: blur(20px) saturate(140%);
     backdrop-filter: blur(20px) saturate(140%);
     border: 1px solid rgba(255,255,255, 0.18);
-    border-radius: 28px;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255, 0.08),
-      0 16px 36px -12px rgba(0,0,0, 0.40);
+    border-radius: 24px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255, 0.08);
     color: var(--c-cream);
   }
 
@@ -526,16 +521,16 @@
     background: rgba(251,249,242,0.55);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255,255,255,0.6);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 14px 36px -12px rgba(23,20,15,0.10);
+    border: 1px solid rgba(23,20,15,0.10);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset;
   }
   .price-card-featured {
     background: rgba(23,20,15,0.92);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.12);
     color: var(--c-cream);
-    box-shadow: 0 14px 36px -12px rgba(23,20,15,0.30);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset;
   }
   .price-card-featured .price-rule { border-color: #3A332A; }
   .price-card-featured .price-accent { color: #E9A76A; }
@@ -794,7 +789,7 @@
       <span class="font-display text-[20px] font-semibold tracking-tight">Mentink op maat</span>
     </a>
 
-    <nav class="hidden md:flex items-center gap-1.5 text-[15px]" id="nav-links">
+    <nav class="nav-island hidden md:inline-flex text-[14px]" id="nav-links">
       <a href="#diensten"  class="nav-pill">Diensten</a>
       <a href="#werkwijze" class="nav-pill">Werkwijze</a>
       <a href="#tarieven"  class="nav-pill">Tarieven</a>
@@ -1105,7 +1100,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-5">
       <!-- Tier 1: Basis (glass) -->
-      <div class="price-card rounded-[20px] md:rounded-[28px] p-3 md:p-7 flex flex-col scroll-reveal">
+      <div class="price-card rounded-[24px] p-3 md:p-7 flex flex-col scroll-reveal">
         <div class="flex items-baseline justify-between">
           <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Basis</h3>
           <span class="font-mono text-[9px] md:text-[11px] text-mute tracking-widest">DOE-HET-ZELF</span>
@@ -1127,7 +1122,7 @@
       </div>
 
       <!-- Tier 2: Standaard (featured / dark contrast) -->
-      <div class="price-card-featured rounded-[20px] md:rounded-[28px] p-3 md:p-7 flex flex-col scroll-reveal relative">
+      <div class="price-card-featured rounded-[24px] p-3 md:p-7 flex flex-col scroll-reveal relative">
         <span class="absolute -top-2 md:-top-3 left-4 md:left-8 bg-orange text-cream text-[9px] md:text-[11px] font-mono tracking-widest px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase">Populair</span>
         <div class="flex items-baseline justify-between">
           <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Standaard</h3>
@@ -1153,7 +1148,7 @@
       </div>
 
       <!-- Tier 3: Premium (glass) -->
-      <div class="price-card rounded-[20px] md:rounded-[28px] p-3 md:p-7 flex flex-col scroll-reveal">
+      <div class="price-card rounded-[24px] p-3 md:p-7 flex flex-col scroll-reveal">
         <div class="flex items-baseline justify-between">
           <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Premium</h3>
           <span class="font-mono text-[9px] md:text-[11px] text-mute tracking-widest">ALL-IN</span>
@@ -1175,7 +1170,7 @@
       </div>
     </div>
 
-    <div class="perhour-strip mt-3 md:mt-6 rounded-[16px] md:rounded-[28px] p-3 md:p-6 grid grid-cols-12 gap-2 md:gap-8 items-center scroll-reveal">
+    <div class="perhour-strip mt-3 md:mt-6 rounded-[16px] p-3 md:p-6 grid grid-cols-12 gap-2 md:gap-8 items-center scroll-reveal">
       <div class="col-span-8 md:col-span-8">
         <h3 class="font-display text-[13px] md:text-[24px] tracking-tight leading-tight font-semibold">
           Liever per uur? <span class="italic-swash">€40/uur</span><span class="hidden md:inline"> — incl. financieel advies, geen abonnement.</span>
