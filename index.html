@@ -597,18 +597,28 @@
     border: 1px solid rgba(255,255,255,0.12);
     color: var(--c-cream);
     box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset;
-    overflow: hidden;
+    /* NOTE: do NOT use overflow:hidden here — it clips the POPULAIR badge that
+       sits at negative top. Wash below is self-clipped via border-radius. */
   }
   /* Subtle warm-amber wash at top of the featured card, behind content.
-     Guides the eye to "Standaard" before the eye reads the other tiers. */
+     Guides the eye to "Standaard" before the eye reads the other tiers.
+     Self-clipped with matching 24px radius since parent no longer overflow-hides. */
   .price-card-featured::before {
     content: "";
     position: absolute;
     inset: 0;
+    border-radius: inherit;
     background: radial-gradient(140% 60% at 50% -20%, rgba(233,167,106, 0.16), transparent 60%);
     pointer-events: none;
+    z-index: 0;
   }
-  .price-card-featured > * { position: relative; }
+  .price-card-featured > * { position: relative; z-index: 1; }
+  /* POPULAIR badge — sharper, sits cleanly above the radial wash, with a soft
+     ambient shadow so it reads as a chip rather than a pasted label. */
+  .price-card-featured > .price-badge {
+    z-index: 3;
+    box-shadow: 0 4px 14px rgba(233,108,53,0.35), 0 1px 0 rgba(255,255,255,0.18) inset;
+  }
   .price-card-featured .price-rule { border-color: #3A332A; }
   .price-card-featured .price-accent { color: #E9A76A; }
 
@@ -1126,46 +1136,46 @@
     </div>
 
     <div class="rule-top">
-      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+      <article class="svc-card rule-bottom py-3 md:py-9 grid grid-cols-12 gap-3 md:gap-10 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
         <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">01</span>
         <div class="col-span-10 md:col-span-5">
           <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">Boekhouding</h3>
           <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Programma · inboeken · controle</p>
         </div>
-        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] lg:text-[16px] text-ink2 leading-[1.45] md:leading-[1.6]">
           Moneybird met bankkoppeling. Bij Standaard en Premium boek ik je bonnen en facturen in. Bij Basis controleer ik maandelijks.
         </p>
       </article>
 
-      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+      <article class="svc-card rule-bottom py-3 md:py-9 grid grid-cols-12 gap-3 md:gap-10 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
         <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">02</span>
         <div class="col-span-10 md:col-span-5">
           <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">BTW &amp; inkomstenbelasting</h3>
           <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Kwartaal · jaar · suppleties</p>
         </div>
-        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] lg:text-[16px] text-ink2 leading-[1.45] md:leading-[1.6]">
           BTW per kwartaal bij alle pakketten. IB jaarlijks bij Premium (of los). Geen verrassingen, op tijd ingediend.
         </p>
       </article>
 
-      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+      <article class="svc-card rule-bottom py-3 md:py-9 grid grid-cols-12 gap-3 md:gap-10 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
         <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">03</span>
         <div class="col-span-10 md:col-span-5">
           <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">Facturen &amp; herinneringen</h3>
           <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Versturen · debiteuren · opvolging</p>
         </div>
-        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] lg:text-[16px] text-ink2 leading-[1.45] md:leading-[1.6]">
           Bij Premium maak ik je facturen en stuur betaalherinneringen aan klanten die te laat zijn. Jij hoeft het niet bij te houden.
         </p>
       </article>
 
-      <article class="svc-card rule-bottom py-3 md:py-7 grid grid-cols-12 gap-3 md:gap-8 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
+      <article class="svc-card rule-bottom py-3 md:py-9 grid grid-cols-12 gap-3 md:gap-10 items-start px-2 md:px-4 -mx-2 md:-mx-4 scroll-reveal" data-svc>
         <span class="font-mono text-[12px] text-mute col-span-2 md:col-span-1 pt-2">04</span>
         <div class="col-span-10 md:col-span-5">
           <h3 class="font-display text-[17px] md:text-[24px] lg:text-[28px] tracking-tight leading-tight font-semibold">Financieel advies</h3>
           <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Per uur · €40 · geen abonnement</p>
         </div>
-        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] text-ink2 leading-[1.45]">
+        <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] lg:text-[16px] text-ink2 leading-[1.45] md:leading-[1.6]">
           Cashflow, prognoses of even sparren — €40/uur, ook zonder lopend abonnement. Klare taal, geen jargon.
         </p>
       </article>
@@ -1270,7 +1280,7 @@
 
       <!-- Tier 2: Standaard (featured / dark contrast) -->
       <div class="price-card-featured rounded-[24px] p-3 md:p-7 flex flex-col scroll-reveal relative">
-        <span class="absolute -top-2 md:-top-3 left-4 md:left-8 bg-orange text-cream text-[9px] md:text-[11px] font-mono tracking-widest px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase">Populair</span>
+        <span class="price-badge absolute -top-2 md:-top-3 left-4 md:left-8 bg-orange text-cream text-[9px] md:text-[11px] font-mono tracking-widest px-2.5 md:px-3.5 py-0.5 md:py-1 rounded-full uppercase">Populair</span>
         <div class="flex items-baseline justify-between">
           <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Standaard</h3>
           <span class="font-mono text-[9px] md:text-[11px] tracking-widest" style="color:#C5B896">UIT HANDEN</span>
