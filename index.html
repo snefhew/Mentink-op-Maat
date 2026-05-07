@@ -77,6 +77,7 @@
     --c-ink: #17140F;
     --c-orange: #1E7A48;
     --c-rule: #E5DCC4;
+    --c-mute: #7A6F5E;
     /* unified motion tokens — keeps every transition on the same curve so
        hover/press/reveal feel like the same hand. */
     --ease-out: cubic-bezier(.22,1,.36,1);   /* quick start, soft tail */
@@ -555,7 +556,7 @@
     overflow: hidden;
     background:
       radial-gradient(120% 80% at 30% 18%, rgba(255,210,140,0.22), transparent 50%),
-      radial-gradient(90% 60% at 80% 85%, rgba(204,74,29,0.10), transparent 65%),
+      radial-gradient(90% 60% at 80% 85%, rgba(30,122,72,0.10), transparent 65%),
       linear-gradient(170deg, #F1E7CF 0%, #E2D4B2 55%, #C9B98F 100%);
     border: 1px solid rgba(23,20,15,0.10);
     /* soft inner shadow ring suggests depth in the warm-toned surface */
@@ -611,8 +612,8 @@
     font-size: 14px;
     line-height: 1;
     color: var(--c-orange);
-    background: rgba(204,74,29, 0.08);
-    border: 1px solid rgba(204,74,29, 0.22);
+    background: rgba(30,122,72, 0.08);
+    border: 1px solid rgba(30,122,72, 0.22);
     border-radius: 999px;
     padding: 4px 11px 5px;
     letter-spacing: -0.02em;
@@ -671,7 +672,7 @@
     position: absolute; inset: 0;
     background:
       linear-gradient(180deg, rgba(23,20,15,0.86) 0%, rgba(23,20,15,0.68) 30%, rgba(23,20,15,0.68) 70%, rgba(23,20,15,0.92) 100%),
-      radial-gradient(120% 80% at 70% 30%, rgba(204,74,29,0.10), transparent 60%);
+      radial-gradient(120% 80% at 70% 30%, rgba(30,122,72,0.10), transparent 60%);
     z-index: -1;
   }
   .diensten-section .eyebrow { color: rgba(251,249,242,0.55); }
@@ -1257,7 +1258,7 @@
             </div>
             <div class="mt-3 pt-3 border-t border-rule/60 flex items-center gap-2">
               <div class="w-6 h-6 rounded-full bg-orange/15 flex items-center justify-center">
-                <svg width="11" height="11" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="#CC4A1D" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+                <svg width="11" height="11" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="#1E7A48" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
               </div>
               <p class="text-[12px] text-ink2">Herinnering verzonden</p>
             </div>
@@ -1302,7 +1303,7 @@
           <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Programma · inboeken · controle</p>
         </div>
         <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] lg:text-[16px] text-ink2 leading-[1.45] md:leading-[1.6]">
-          Moneybird met bankkoppeling. Bij Standaard en Premium boek ik je bonnen en facturen in. Bij Basis controleer ik maandelijks.
+          Jort met bankkoppeling. Bij Standaard en Premium boek ik je bonnen en facturen in. Bij Basis controleer ik maandelijks.
         </p>
       </article>
 
