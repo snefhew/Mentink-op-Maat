@@ -1119,7 +1119,10 @@
       overflow: hidden;
       isolation: isolate;
       display: flex;
-      align-items: flex-end;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 80px;
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
     .foto-section-bg {
@@ -1133,12 +1136,22 @@
     .foto-section-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(23,20,15,0.05) 0%, rgba(23,20,15,0.75) 70%, rgba(23,20,15,0.90) 100%);
+      background: linear-gradient(180deg, rgba(23,20,15,0.15) 0%, rgba(23,20,15,0.65) 60%, rgba(23,20,15,0.92) 100%);
       z-index: -1;
     }
+    .foto-mockup {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      overflow: visible;
+      padding: 0 60px;
+    }
     .foto-section-content {
-      padding: 0 24px 48px;
+      padding: 0 24px 36px;
       color: #FEFDF9;
+      width: 100%;
     }
     .foto-eyebrow {
       font-family: 'JetBrains Mono', monospace;
@@ -1146,16 +1159,16 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: rgba(254,253,249,0.55);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .foto-headline {
       font-family: 'Inter Tight', sans-serif;
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 600;
       line-height: 0.95;
       letter-spacing: -0.03em;
       color: #FEFDF9;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
   }
   @media (min-width: 768px) {
@@ -1266,7 +1279,7 @@
 
         <div class="mt-6 md:mt-10 grid grid-cols-12 gap-6">
           <p class="col-span-12 md:col-span-7 text-[15px] md:text-[17px] lg:text-[19px] leading-[1.55] text-ink2 max-w-[56ch] reveal" style="animation-delay:.3s">
-            Als zzp'er wil je <em class="font-display italic text-orange">ondernemen</em>, niet urenlang worstelen met bonnetjes en belastingaangiften. Mentink op Maat neemt jouw administratiezorgen uit handen &mdash; persoonlijk, overzichtelijk en precies wat jij nodig hebt.
+            Als zzp'er wil je <em class="font-display italic text-orange">ondernemen</em>, niet urenlang worstelen met bonnetjes en belastingaangiften. Mentink op Maat neemt jouw administratiezorgen uit handen, persoonlijk, overzichtelijk en precies wat jij nodig hebt.
           </p>
         </div>
 
@@ -1312,7 +1325,7 @@
             </div>
             <h4 class="font-display text-[28px] text-ink font-semibold tracking-tight leading-none">Job</h4>
             <p class="text-[12px] text-ink2 leading-snug mt-2 max-w-[34ch]">
-              Persoonlijke boekhouding — vast aanspreekpunt, duidelijke cijfers, altijd op tijd ingediend.
+              Persoonlijke boekhouding, vast aanspreekpunt, duidelijke cijfers, altijd op tijd ingediend.
             </p>
           </div>
 
@@ -1327,7 +1340,7 @@
               <div class="min-w-0">
                 <p class="font-mono text-[10px] tracking-widest uppercase text-mute">BTW Q2 · 2026</p>
                 <p class="font-display text-[15px] font-semibold mt-0.5 leading-tight">Aangifte ingediend</p>
-                <p class="text-[12px] text-ink2 mt-1 leading-snug">Op tijd verwerkt &mdash; geen actie nodig.</p>
+                <p class="text-[12px] text-ink2 mt-1 leading-snug">Op tijd verwerkt. Geen actie nodig.</p>
               </div>
             </div>
           </div>
@@ -1361,6 +1374,75 @@
 <section id="foto" class="foto-section" data-section data-theme="dark">
   <div class="foto-section-bg"></div>
   <div class="foto-section-overlay"></div>
+
+  <!-- Mockup: same composition as desktop hero right column, dark-adapted -->
+  <div class="foto-mockup">
+    <div style="position:relative;max-width:240px;width:100%;margin:0 auto;">
+
+      <p style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(254,253,249,0.45);margin-bottom:8px;padding-left:4px;display:inline-flex;align-items:center;gap:8px;">
+        <span style="display:inline-block;width:14px;height:1px;background:currentColor;"></span>Job achter de laptop
+      </p>
+
+      <!-- Photo slot placeholder -->
+      <div style="position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:radial-gradient(120% 80% at 30% 18%,rgba(255,210,140,0.22),transparent 50%),radial-gradient(90% 60% at 80% 85%,rgba(30,122,72,0.10),transparent 65%),linear-gradient(170deg,#F1E7CF 0%,#E2D4B2 55%,#C9B98F 100%);border:1px solid rgba(23,20,15,0.10);box-shadow:inset 0 1px 0 rgba(255,255,255,0.45),inset 0 -40px 60px -30px rgba(120,80,40,0.18);">
+        <svg style="position:absolute;inset:8% 14% 0 14%;color:#17140F;opacity:0.32;" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="100" cy="60" r="22" fill="currentColor"/>
+          <path d="M55 130 Q 100 100 145 130 L 152 175 L 48 175 Z" fill="currentColor"/>
+          <rect x="40" y="195" width="120" height="6" rx="2" fill="currentColor"/>
+          <rect x="52" y="155" width="96" height="42" rx="3" fill="currentColor" opacity="0.7"/>
+          <rect x="58" y="161" width="60" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
+          <rect x="58" y="168" width="80" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
+          <rect x="58" y="175" width="48" height="3" rx="1" fill="#FBF9F2" opacity="0.5"/>
+          <rect x="58" y="184" width="36" height="6" rx="2" fill="#1E7A48" opacity="0.7"/>
+        </svg>
+      </div>
+
+      <!-- Liquid glass info tile — dark variant -->
+      <div class="liquid-glass-dark" style="position:relative;z-index:1;margin-top:-32px;margin-left:auto;margin-right:auto;width:88%;padding:42px 16px 14px;">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">
+          <img src="assets/logo-light.png" alt="" style="width:14px;height:14px;opacity:0.65;" />
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(254,253,249,0.45);">Mentink op maat</span>
+        </div>
+        <h4 style="font-family:'Inter Tight',sans-serif;font-size:20px;color:#FEFDF9;font-weight:600;letter-spacing:-0.03em;line-height:1;">Job</h4>
+        <p style="font-size:11px;color:rgba(254,253,249,0.60);line-height:1.4;margin-top:5px;">Persoonlijke boekhouding, vast aanspreekpunt, altijd op tijd ingediend.</p>
+      </div>
+
+      <!-- BTW floating tile — top-right, dark glass -->
+      <div class="glass-card-dark" style="position:absolute;top:10px;right:-42px;width:168px;z-index:3;padding:11px 13px;">
+        <div style="display:flex;align-items:flex-start;gap:9px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:rgba(30,90,56,0.20);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(30,122,72,0.28);">
+            <svg width="13" height="13" viewBox="0 0 18 18" fill="none"><path d="M4 9.5L7.5 13L14 6" stroke="#5FB88A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div style="min-width:0;">
+            <p style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(254,253,249,0.40);">BTW Q2 · 2026</p>
+            <p style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:600;margin-top:2px;color:#FEFDF9;line-height:1.2;">Aangifte ingediend</p>
+            <p style="font-size:10.5px;color:rgba(254,253,249,0.55);margin-top:3px;line-height:1.3;">Op tijd verwerkt. Geen actie nodig.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Factuur floating tile — left side, dark glass -->
+      <div class="glass-card-dark" style="position:absolute;top:56%;left:-42px;width:185px;z-index:3;padding:11px 13px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <p style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(254,253,249,0.40);">Factuur · 2026-014</p>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:#E9A76A;">Betaald</span>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;">
+          <p style="font-family:'Inter Tight',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.03em;color:#FEFDF9;">€ 1.250<span style="color:rgba(254,253,249,0.40);font-size:12px;">,00</span></p>
+          <p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(254,253,249,0.40);">14 dagen</p>
+        </div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(254,253,249,0.12);display:flex;align-items:center;gap:7px;">
+          <div style="width:18px;height:18px;border-radius:50%;background:rgba(233,167,106,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="9" height="9" viewBox="0 0 14 14"><path d="M3 7h8M7 3l4 4-4 4" stroke="#E9A76A" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <p style="font-size:10.5px;color:rgba(254,253,249,0.60);">Herinnering verzonden</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Text at bottom -->
   <div class="foto-section-content">
     <p class="foto-eyebrow">Job Mentink · Boekhouder</p>
     <h2 class="foto-headline">Jij onderneemt.<br><span class="italic-swash" style="color:#E9A76A">Ik regel</span> de rest.</h2>
@@ -1434,7 +1516,7 @@
           <p class="hidden md:block mt-1.5 text-[13px] font-mono text-mute">Per uur · €40 · geen abonnement</p>
         </div>
         <p class="col-span-12 md:col-span-6 text-[12px] md:text-[15px] lg:text-[16px] text-ink2 leading-[1.45] md:leading-[1.6]">
-          Cashflow, prognoses of even sparren — €40/uur, ook zonder lopend abonnement. Klare taal, geen jargon.
+          Cashflow, prognoses of even sparren: €40/uur, ook zonder lopend abonnement. Klare taal, geen jargon.
         </p>
       </article>
     </div>
@@ -1475,7 +1557,7 @@
         <p class="font-display italic text-[32px] md:text-[56px] lg:text-[64px] leading-none font-semibold" style="color:#E9A76A">02</p>
         <h3 class="font-display text-[18px] md:text-[24px] mt-1 md:mt-3 tracking-tight font-semibold">Overdracht</h3>
         <p class="mt-1 md:mt-2 text-[12px] md:text-[15px] text-cream/80 leading-[1.4] md:leading-[1.55] max-w-[40ch]">
-          Machtigingen, bankkoppelingen, overname van je oude boekhouder — dat regel ik. Jij levert alleen de saldibalans aan.
+          Machtigingen, bankkoppelingen, overname van je oude boekhouder: dat regel ik. Jij levert alleen de saldibalans aan.
         </p>
         <p class="mt-2 md:mt-5"><span class="step-pill is-mute">1-2 weken</span></p>
       </div>
@@ -1541,7 +1623,7 @@
           <h3 class="font-display text-[16px] md:text-[24px] tracking-tight font-semibold">Standaard</h3>
           <span class="font-mono text-[9px] md:text-[11px] tracking-widest" style="color:#C5B896">UIT HANDEN</span>
         </div>
-        <p class="hidden md:block mt-2 text-[14px] text-cream/70">Het meest gekozen pakket &mdash; administratie én IB-aangifte volledig uit handen.</p>
+        <p class="hidden md:block mt-2 text-[14px] text-cream/70">Het meest gekozen pakket: administratie én IB-aangifte volledig uit handen.</p>
         <div class="hidden md:block mt-8 mb-6 price-rule border-b"></div>
         <p class="flex items-baseline gap-1">
           <span class="font-display num-tab text-[26px] md:text-[64px] leading-none tracking-tight font-semibold">€99</span>
@@ -1588,7 +1670,7 @@
     <div class="perhour-strip mt-3 md:mt-6 rounded-[16px] p-3 md:p-6 grid grid-cols-12 gap-2 md:gap-8 items-center scroll-reveal">
       <div class="col-span-8 md:col-span-8">
         <h3 class="font-display text-[13px] md:text-[24px] tracking-tight leading-tight font-semibold">
-          Liever per uur? <span class="italic-swash">€40/uur</span><span class="hidden md:inline"> — incl. financieel advies, geen abonnement.</span>
+          Liever per uur? <span class="italic-swash">€40/uur</span><span class="hidden md:inline"> incl. financieel advies, geen abonnement.</span>
         </h3>
       </div>
       <div class="col-span-4 md:col-span-4 flex md:justify-end justify-end">
@@ -1642,7 +1724,7 @@ END HIDDEN-FOR-LATER:testimonial -->
               <span class="faq-plus shrink-0 mt-2"></span>
             </summary>
             <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
-              Standaard werk ik in Jort &mdash; fijn voor ZZP en kleine BV's, en je kunt zelf altijd meekijken. Heb je al iets anders draaien (Exact, e-Boekhouden, etc.)? Vertel het even, dan kijken we of we daarmee verder werken.
+              Standaard werk ik in Jort, fijn voor ZZP en kleine BV's, en je kunt zelf altijd meekijken. Heb je al iets anders draaien (Exact, e-Boekhouden, etc.)? Vertel het even, dan kijken we of we daarmee verder werken.
             </p>
           </details>
 
@@ -1662,7 +1744,7 @@ END HIDDEN-FOR-LATER:testimonial -->
               <span class="faq-plus shrink-0 mt-2"></span>
             </summary>
             <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
-              Een drukke maand maakt de prijs niet duurder. Pas als je structureel boven je staffel uitkomt, kijken we samen of een ander pakket beter past &mdash; vanaf de volgende maand. Ik waarschuw je altijd voordat ik iets aanpas.
+              Een drukke maand maakt de prijs niet duurder. Pas als je structureel boven je staffel uitkomt, kijken we samen of een ander pakket beter past, vanaf de volgende maand. Ik waarschuw je altijd voordat ik iets aanpas.
             </p>
           </details>
 
@@ -1682,7 +1764,7 @@ END HIDDEN-FOR-LATER:testimonial -->
               <span class="faq-plus shrink-0 mt-2"></span>
             </summary>
             <p class="mt-4 text-[16px] text-ink2 leading-[1.65] pr-12">
-              Op werkdagen meestal binnen één werkdag, vaak sneller. Mail, telefoon, WhatsApp &mdash; pak gewoon wat het handigst is.
+              Op werkdagen meestal binnen één werkdag, vaak sneller. Mail, telefoon of WhatsApp: pak gewoon wat het handigst is.
             </p>
           </details>
         </div>
@@ -1708,7 +1790,7 @@ END HIDDEN-FOR-LATER:testimonial -->
           <span style="color:#E9A76A" class="italic-swash">heldere cijfers?</span>
         </h2>
         <p class="mt-3 md:mt-8 text-[13px] md:text-[20px] text-cream/80 max-w-[54ch] leading-[1.45] md:leading-[1.55] scroll-reveal">
-          Plan een kosteloos kennismakingsgesprek van 30 minuten. Bij jou langs of via video &mdash; wat je het prettigst vindt.
+          Plan een kosteloos kennismakingsgesprek van 30 minuten. Bij jou langs of via video, wat je het prettigst vindt.
         </p>
 
         <div class="mt-6 md:mt-10 max-w-[460px] h-px bg-gradient-to-r from-cream/25 via-cream/10 to-transparent scroll-reveal" aria-hidden="true"></div>
