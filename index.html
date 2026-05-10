@@ -2,7 +2,7 @@
 <html lang="nl-NL">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Mentink op maat — Boekhouding voor ZZP'ers &amp; MKB · vanaf €59/mnd</title>
 <meta name="description" content="Persoonlijke boekhouding, BTW-aangifte en advies door één vast aanspreekpunt. Vaste maandprijs vanaf €59 of €40 per uur — voor ZZP'ers en kleine ondernemers in Nederland." />
 <meta name="author" content="Mentink op maat" />
@@ -135,14 +135,15 @@
      Nav row is roughly 70px on desktop. */
   .hero-section { padding-top: clamp(80px, 9vh, 120px); }
 
-  /* ---------- .snap-pane — every snap section becomes a perfectly-centred 100svh viewport ----------
-     Hero already uses flex+justify-center inside .hero-section. For werkwijze/
-     tarieven/contact the content was shorter than the viewport, so the next
-     section was bleeding in from below. Forcing min-height: 100svh + flex
-     center fixes that complaint. .diensten-section overrides min-height to
-     100svh as well; padding is trimmed elsewhere so 4 services fit. */
+  /* ---------- .snap-pane — every snap section becomes a perfectly-centred 100dvh viewport ----------
+     dvh (dynamic viewport height) is used instead of svh: on iOS Safari the
+     dynamic variant correctly shrinks when the address bar is visible and expands
+     when it hides, preventing content cut-off. svh is the "small" fixed value
+     which always assumes the address bar is shown — on scroll the bar hides and
+     svh sections become shorter than the actual viewport, causing bleed-in.
+     On Android Chrome dvh also tracks the bottom navigation bar correctly. */
   .snap-pane {
-    min-height: 100svh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -644,9 +645,9 @@
     background: linear-gradient(90deg, rgba(251,249,242,0.55) 0%, rgba(251,249,242,0.45) 70%, transparent 100%);
   }
 
-  /* ---------- HERO — full viewport (mobile-safe with svh) ---------- */
+  /* ---------- HERO — full viewport (dvh = dynamic, tracks iOS address bar) ---------- */
   .hero-section {
-    min-height: 100svh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -655,7 +656,7 @@
   /* ---------- DIENSTEN — cinematic full-bleed bg + dark overlay ---------- */
   .diensten-section {
     position: relative;
-    min-height: 100svh;
+    min-height: 100dvh;
     color: var(--c-cream);
     overflow: hidden;
     isolation: isolate;
@@ -1064,7 +1065,7 @@
   }
 
   /* Mobile-compact pricing: shrink buttons + per-hour-strip CTAs so the
-     whole tarieven section + heading still fits inside 100svh on phone. */
+     whole tarieven section + heading still fits inside 100dvh on phone. */
   @media (max-width: 767px) {
     .price-card .btn-ghost,
     .price-card-featured > a:last-child,
@@ -1081,6 +1082,64 @@
       transition-duration: 0.01ms !important;
     }
     .reveal, .scroll-reveal, .float-a, .float-b { opacity: 1 !important; transform: none !important; }
+  }
+
+  /* ---------- MOBILE SNAP OVERRIDES ----------
+     On small viewports sections like FAQ and Tarieven can exceed 100dvh.
+     Those sections must NOT be hard-locked by snap — they need free inner
+     scroll. We mark them .snap-free on mobile and let JS skip snap registration.
+     Also: sections with overflow content get min-height: auto so iOS doesn't
+     clip them. The JS disables Lenis snap entirely on touch devices and falls
+     back to native smooth-scroll + IntersectionObserver active-state tracking. */
+  @media (max-width: 767px) {
+    /* Allow tall sections to grow beyond the viewport instead of clipping */
+    .snap-pane {
+      min-height: auto;
+      /* Ensure content sections can breathe on small screens */
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    /* Hero always fills the full dynamic viewport on mobile */
+    .hero-section {
+      min-height: 100dvh;
+      /* Compensate for notch on iPhone */
+      padding-top: calc(env(safe-area-inset-top) + 80px);
+    }
+    /* Scroll dots: hide on very small phones to avoid overlap */
+    .scroll-dots { right: 2px; }
+  }
+
+  /* ---------- PHOTO SECTION — person at laptop full-bleed ---------- */
+  .photo-section {
+    position: relative;
+    min-height: 70dvh;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+  }
+  .photo-section-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('assets/cinematic-bg.jpg');
+    background-size: cover;
+    background-position: center 30%;
+    background-attachment: scroll; /* fixed breaks on iOS */
+    z-index: -2;
+  }
+  .photo-section-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, rgba(23,20,15,0.82) 0%, rgba(23,20,15,0.55) 50%, rgba(23,20,15,0.30) 100%),
+      linear-gradient(180deg, rgba(23,20,15,0.10) 0%, rgba(23,20,15,0.50) 100%);
+    z-index: -1;
+  }
+  /* Safari -webkit-fill-available fallback for dvh */
+  @supports not (min-height: 100dvh) {
+    .hero-section, .snap-pane, .diensten-section {
+      min-height: -webkit-fill-available;
+    }
   }
 </style>
 </head>
@@ -1138,6 +1197,7 @@
   <ul>
     <li><a href="#hero"      data-target="hero"><span class="label">Home</span><span class="dot"></span></a></li>
     <li><a href="#diensten"  data-target="diensten"><span class="label">Diensten</span><span class="dot"></span></a></li>
+    <li><a href="#over"      data-target="over"><span class="label">Over mij</span><span class="dot"></span></a></li>
     <li><a href="#werkwijze" data-target="werkwijze"><span class="label">Werkwijze</span><span class="dot"></span></a></li>
     <li><a href="#tarieven"  data-target="tarieven"><span class="label">Tarieven</span><span class="dot"></span></a></li>
     <li><a href="#faq"       data-target="faq"><span class="label">Vragen</span><span class="dot"></span></a></li>
@@ -1343,13 +1403,68 @@
   </div>
 </section>
 
+<!-- ============ PHOTO — person at laptop, full-bleed cinematic reveal ============ -->
+<section id="over" class="photo-section" data-section data-theme="dark">
+  <div class="photo-section-bg"></div>
+  <div class="photo-section-overlay"></div>
+  <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-24 w-full">
+    <div class="grid grid-cols-12 gap-6 md:gap-10 items-center">
+      <div class="col-span-12 md:col-span-6 lg:col-span-5">
+        <p class="section-eyebrow mb-4 scroll-reveal">
+          <span class="se-num">03</span>
+          <span class="se-line"></span>
+          <span class="se-label">Wie ben ik</span>
+        </p>
+        <h2 class="font-display text-[32px] sm:text-[48px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-semibold text-cream">
+          Jij onderneemt.<br>
+          <span class="italic-swash" style="color:#E9A76A">Ik regel</span> de rest.
+        </h2>
+        <p class="mt-5 md:mt-8 text-[14px] md:text-[17px] leading-[1.55] text-cream/80 max-w-[48ch] scroll-reveal">
+          Ik ben Job Mentink — boekhouder met een hekel aan onnodig jargon. Persoonlijk contact, vaste prijs, en altijd één aanspreekpunt. Geen doorverwijzingen, geen verrassingen.
+        </p>
+        <div class="mt-6 md:mt-10 flex flex-wrap gap-3 scroll-reveal">
+          <a href="#contact" class="btn-primary">
+            Plan kennismaking
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="col-span-12 md:col-span-5 md:col-start-8 lg:col-start-8 scroll-reveal">
+        <div class="grid grid-cols-2 gap-3 md:gap-4">
+          <div class="liquid-glass-dark rounded-[16px] p-4 md:p-6">
+            <p class="font-display num-tab text-[36px] md:text-[48px] font-semibold leading-none" style="color:#E9A76A">€59</p>
+            <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/60 mt-1">Vanaf per maand</p>
+          </div>
+          <div class="liquid-glass-dark rounded-[16px] p-4 md:p-6">
+            <p class="font-display num-tab text-[36px] md:text-[48px] font-semibold leading-none text-cream">1</p>
+            <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/60 mt-1">Vast aanspreekpunt</p>
+          </div>
+          <div class="liquid-glass-dark rounded-[16px] p-4 md:p-6 col-span-2">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-orange/20 flex items-center justify-center shrink-0 ring-1 ring-orange/30">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M4 9.5L7.5 13L14 6" stroke="#1E7A48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <p class="font-display text-[15px] font-semibold text-cream leading-tight">Altijd op tijd ingediend</p>
+                <p class="text-[12px] text-cream/60 mt-0.5">BTW · IB · jaarstukken</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ WERKWIJZE — snap-pane centred, smaller step numerals ============ -->
 <section id="werkwijze" class="bg-forest text-cream relative snap-pane" data-section data-theme="dark">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-20 relative w-full">
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-5 md:mb-14">
       <div class="col-span-12 md:col-span-5">
         <p class="section-eyebrow mb-2 md:mb-4 scroll-reveal">
-          <span class="se-num">03</span>
+          <span class="se-num">04</span>
           <span class="se-line"></span>
           <span class="se-label">Werkwijze</span>
         </p>
@@ -1399,7 +1514,7 @@
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-3 md:mb-12">
       <div class="col-span-12 md:col-span-5">
         <p class="section-eyebrow mb-2 md:mb-3 scroll-reveal">
-          <span class="se-num">04</span>
+          <span class="se-num">05</span>
           <span class="se-line"></span>
           <span class="se-label">Tarieven</span>
         </p>
@@ -1517,7 +1632,7 @@ END HIDDEN-FOR-LATER:testimonial -->
     <div class="grid grid-cols-12 gap-6 md:gap-10">
       <div class="col-span-12 md:col-span-4">
         <p class="section-eyebrow mb-5 scroll-reveal">
-          <span class="se-num">05</span>
+          <span class="se-num">06</span>
           <span class="se-line"></span>
           <span class="se-label">Veelgestelde vragen</span>
         </p>
@@ -1601,7 +1716,7 @@ END HIDDEN-FOR-LATER:testimonial -->
     <div class="relative grid grid-cols-12 gap-4 md:gap-10">
       <div class="col-span-12 md:col-span-8">
         <p class="section-eyebrow mb-3 md:mb-6 scroll-reveal">
-          <span class="se-num">06</span>
+          <span class="se-num">07</span>
           <span class="se-line"></span>
           <span class="se-label">Laten we kennismaken</span>
         </p>
@@ -1706,6 +1821,17 @@ END HIDDEN-FOR-LATER:testimonial -->
   const sections = Array.from(document.querySelectorAll('[data-section]'));
 
   // ----------------------------------------------------------------
+  // Detect touch/mobile: disable Lenis snap on touch devices.
+  // On iOS Safari and Android Chrome, Lenis' snap 'lock' type intercepts
+  // native momentum scroll and causes sections to be skipped or content
+  // to be cut off. Native scroll + CSS scroll-margin is far more reliable.
+  // We use a coarse-pointer media query + touch detection as the signal.
+  // ----------------------------------------------------------------
+  const isTouch = window.matchMedia('(pointer: coarse)').matches
+               || ('ontouchstart' in window)
+               || (navigator.maxTouchPoints > 0);
+
+  // ----------------------------------------------------------------
   // Active-dot + nav-pill + theme spy (works regardless of scroll engine)
   // ----------------------------------------------------------------
   const dotLinks = document.querySelectorAll('#scroll-dots a');
@@ -1719,9 +1845,9 @@ END HIDDEN-FOR-LATER:testimonial -->
   const setTheme = (theme) => {
     if (scrollDotsEl) scrollDotsEl.classList.toggle('is-dark', theme === 'dark');
   };
-  // rootMargin -50% top + bottom: only fire when the section's center crosses
-  // the viewport center. Works for tall sections (FAQ) where 0.4 threshold
-  // could never be reached.
+
+  // rootMargin -40% top + bottom: fire when section occupies the central
+  // 20% of the viewport. Robust for both short and tall sections.
   const spy = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -1729,13 +1855,11 @@ END HIDDEN-FOR-LATER:testimonial -->
         setTheme(e.target.dataset.theme || 'light');
       }
     });
-  }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+  }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
   sections.forEach(s => spy.observe(s));
 
   // ----------------------------------------------------------------
   // Scroll-dots: expand pill on touch (mobile). Desktop uses :hover.
-  // We add .is-touched on touchstart and auto-remove after 2.5s of
-  // inactivity, so the pill briefly shows on tap and collapses again.
   // ----------------------------------------------------------------
   if (scrollDotsEl) {
     let touchTimer;
@@ -1747,19 +1871,13 @@ END HIDDEN-FOR-LATER:testimonial -->
       }, 2500);
     };
     scrollDotsEl.addEventListener('touchstart', showTouched, { passive: true });
-    // Pointer events catch stylus / hybrid devices that don't fire touch
     scrollDotsEl.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'touch' || e.pointerType === 'pen') showTouched();
     }, { passive: true });
   }
 
   // ----------------------------------------------------------------
-  // (Removed: service-card spotlight-cursor JS — the radial-gradient
-  // hover glow it powered was replaced by a restrained Superhuman-style
-  // 1px orange accent line + cream wash + amber number tint, all CSS.)
-  // ----------------------------------------------------------------
-
-  // Scroll-reveal (unchanged)
+  // Scroll-reveal
   // ----------------------------------------------------------------
   const reveal = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -1768,58 +1886,80 @@ END HIDDEN-FOR-LATER:testimonial -->
         reveal.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
   document.querySelectorAll('.scroll-reveal').forEach(el => reveal.observe(el));
 
   // ----------------------------------------------------------------
-  // NOTE: this site intentionally always runs Lenis even when the user has
-  // OS-level reduced-motion turned on, because the section-snap behaviour
-  // is core to the design. We DO shorten timings on reduced-motion so it's
-  // still gentler than the default ride.
+  // TOUCH / MOBILE PATH — no Lenis, no snap.
+  // Use native browser scroll with smooth behavior. This gives iOS and
+  // Android their native momentum scroll, rubber-band overscroll, and
+  // correct dvh handling. Anchor clicks use scrollIntoView.
   // ----------------------------------------------------------------
-  const animScale = reduceMotion ? 0.55 : 1;       // shorter durations if rm
+  if (isTouch) {
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href');
+        if (!id || id === '#') return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    if (location.hash && document.querySelector(location.hash)) {
+      history.scrollRestoration = 'manual';
+      requestAnimationFrame(() => {
+        document.querySelector(location.hash)
+          .scrollIntoView({ behavior: 'instant', block: 'start' });
+      });
+    }
+
+    return; // skip all Lenis/Snap setup on touch devices
+  }
 
   // ----------------------------------------------------------------
-  // LENIS — virtualized smooth scroll engine
+  // DESKTOP PATH — Lenis smooth scroll + Snap
   // ----------------------------------------------------------------
+  const animScale = reduceMotion ? 0.55 : 1;
+
   const lenis = new Lenis({
-    duration: 1.15 * animScale,                     // base smoothing duration
-    easing: t => 1 - Math.pow(1 - t, 4),            // easeOutQuart — quick start, soft tail
+    duration: 1.15 * animScale,
+    easing: t => 1 - Math.pow(1 - t, 4),
     smoothWheel: true,
     wheelMultiplier: 1,
-    touchMultiplier: 1.4,                           // a bit more travel on touch
+    touchMultiplier: 1.4,
   });
-  window.lenis = lenis; // debug handle
+  window.lenis = lenis;
 
   // ----------------------------------------------------------------
-  // SNAP — purpose-built section-snap module
-  //
-  // Key advantage over hand-rolled rAF: the snap module debounces by
-  // *destination*, not source. Wheel #2 mid-animation correctly advances
-  // the target to N+2 instead of re-pointing to the same N+1 (which was
-  // the "instant jump / trip" bug in the previous custom JS).
+  // SNAP — only on desktop where viewport height is stable.
+  // Sections taller than 95dvh are registered with align:'start' only
+  // (no bottom snap) so the user can scroll freely through them.
   // ----------------------------------------------------------------
+  const vh = window.innerHeight;
   const snap = new Snap(lenis, {
-    type: 'lock',                                   // DIRECTION-based: wheel down = next, wheel up = prev
-    distanceThreshold: '500%',                      // CRITICAL: in 'lock' mode the default '50%' meant
-                                                    // user had to scroll half a viewport before the snap
-                                                    // would even consider firing. '500%' = 5×vh = effectively
-                                                    // unlimited, so any wheel tick triggers the next snap.
+    type: 'lock',
+    distanceThreshold: '500%',
     lerp: 0.1,
-    duration: 1.1,                                  // snap animation length
+    duration: 1.1 * animScale,
     easing: t => t < 0.5
       ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2,            // easeInOutCubic — slow→fast→soft landing
-    debounce: 0,                                    // never swallow wheels — module re-targets
+      : 1 - Math.pow(-2 * t + 2, 3) / 2,
+    debounce: 0,
   });
-  window.snap = snap; // debug handle
+  window.snap = snap;
 
-  // Register every [data-section] as a snap point.
-  // Tall sections (.section-tall, e.g. FAQ) snap at TOP and BOTTOM so
-  // users can scroll naturally inside, then re-snap at the bottom edge.
   sections.forEach(el => {
-    if (el.classList.contains('section-tall')) {
+    const elHeight = el.getBoundingClientRect().height;
+    const isTall = elHeight > vh * 0.95;
+    if (isTall && el.classList.contains('section-tall')) {
+      // FAQ: snap top + bottom so user can read then exit
       snap.addElement(el, { align: ['start', 'end'] });
+    } else if (isTall) {
+      // Other tall sections (e.g. diensten on small desktop): snap top only,
+      // don't trap at bottom — user can free-scroll out
+      snap.addElement(el, { align: 'start' });
     } else {
       snap.addElement(el, { align: 'start' });
     }
@@ -1853,7 +1993,7 @@ END HIDDEN-FOR-LATER:testimonial -->
   });
 
   // ----------------------------------------------------------------
-  // Hash on initial load → smooth-scroll there once Lenis is ready
+  // Hash on initial load
   // ----------------------------------------------------------------
   if (location.hash && document.querySelector(location.hash)) {
     history.scrollRestoration = 'manual';
@@ -1863,12 +2003,12 @@ END HIDDEN-FOR-LATER:testimonial -->
   }
 
   // ----------------------------------------------------------------
-  // Recompute snap points on resize (mobile address-bar collapse, etc.)
+  // Recompute snap points on resize (address-bar collapse, orientation change)
   // ----------------------------------------------------------------
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => snap.resize && snap.resize(), 150);
+    resizeTimer = setTimeout(() => snap.resize && snap.resize(), 200);
   });
 })();
 </script>
