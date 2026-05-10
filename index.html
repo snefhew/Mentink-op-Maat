@@ -1092,16 +1092,18 @@
      clip them. The JS disables Lenis snap entirely on touch devices and falls
      back to native smooth-scroll + IntersectionObserver active-state tracking. */
   @media (max-width: 767px) {
-    /* Allow tall sections to grow beyond the viewport instead of clipping */
+    /* Lock snap sections to exactly one screen height on mobile */
     .snap-pane {
-      min-height: auto;
-      /* Ensure content sections can breathe on small screens */
+      height: 100svh;
+      overflow-y: auto;
+      overflow-x: hidden;
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
     }
-    /* Hero always fills the full dynamic viewport on mobile */
+    /* Hero: stable height that doesn't grow when address bar hides */
     .hero-section {
-      min-height: 100dvh;
+      height: 100svh;
+      overflow: hidden;
       /* Compensate for notch on iPhone */
       padding-top: calc(env(safe-area-inset-top) + 80px);
     }
@@ -1109,32 +1111,57 @@
     .scroll-dots { right: 2px; }
   }
 
-  /* ---------- PHOTO SECTION — person at laptop full-bleed ---------- */
-  .photo-section {
-    position: relative;
-    min-height: 70dvh;
-    overflow: hidden;
-    isolation: isolate;
-    display: flex;
-    align-items: center;
+  /* ---------- FOTO SECTION — mobile-only full-screen photo ---------- */
+  @media (max-width: 767px) {
+    .foto-section {
+      position: relative;
+      height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .foto-section-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/cinematic-bg.jpg');
+      background-size: cover;
+      background-position: center 30%;
+      z-index: -2;
+    }
+    .foto-section-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(23,20,15,0.05) 0%, rgba(23,20,15,0.75) 70%, rgba(23,20,15,0.90) 100%);
+      z-index: -1;
+    }
+    .foto-section-content {
+      padding: 0 24px 48px;
+      color: #FEFDF9;
+    }
+    .foto-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(254,253,249,0.55);
+      margin-bottom: 12px;
+    }
+    .foto-headline {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: #FEFDF9;
+      margin-bottom: 24px;
+    }
   }
-  .photo-section-bg {
-    position: absolute;
-    inset: 0;
-    background-image: url('assets/cinematic-bg.jpg');
-    background-size: cover;
-    background-position: center 30%;
-    background-attachment: scroll; /* fixed breaks on iOS */
-    z-index: -2;
+  @media (min-width: 768px) {
+    .foto-section { display: none !important; }
   }
-  .photo-section-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(135deg, rgba(23,20,15,0.82) 0%, rgba(23,20,15,0.55) 50%, rgba(23,20,15,0.30) 100%),
-      linear-gradient(180deg, rgba(23,20,15,0.10) 0%, rgba(23,20,15,0.50) 100%);
-    z-index: -1;
-  }
+
   /* Safari -webkit-fill-available fallback for dvh */
   @supports not (min-height: 100dvh) {
     .hero-section, .snap-pane, .diensten-section {
@@ -1196,8 +1223,8 @@
 <nav class="scroll-dots" id="scroll-dots" aria-label="Sectie-navigatie">
   <ul>
     <li><a href="#hero"      data-target="hero"><span class="label">Home</span><span class="dot"></span></a></li>
+    <li><a href="#foto"      data-target="foto"><span class="label">Foto</span><span class="dot"></span></a></li>
     <li><a href="#diensten"  data-target="diensten"><span class="label">Diensten</span><span class="dot"></span></a></li>
-    <li><a href="#over"      data-target="over"><span class="label">Over mij</span><span class="dot"></span></a></li>
     <li><a href="#werkwijze" data-target="werkwijze"><span class="label">Werkwijze</span><span class="dot"></span></a></li>
     <li><a href="#tarieven"  data-target="tarieven"><span class="label">Tarieven</span><span class="dot"></span></a></li>
     <li><a href="#faq"       data-target="faq"><span class="label">Vragen</span><span class="dot"></span></a></li>
@@ -1330,6 +1357,17 @@
   </div>
 </section>
 
+<!-- ============ FOTO — mobile-only full-screen photo section ============ -->
+<section id="foto" class="foto-section" data-section data-theme="dark">
+  <div class="foto-section-bg"></div>
+  <div class="foto-section-overlay"></div>
+  <div class="foto-section-content">
+    <p class="foto-eyebrow">Job Mentink · Boekhouder</p>
+    <h2 class="foto-headline">Jij onderneemt.<br><span class="italic-swash" style="color:#E9A76A">Ik regel</span> de rest.</h2>
+    <a href="#contact" class="btn-primary">Plan kennismaking →</a>
+  </div>
+</section>
+
 <!-- ============ DIENSTEN — cinematic full-bleed bg, trimmed to fit 100svh ============ -->
 <section id="diensten" class="diensten-section snap-pane relative z-10" data-section data-theme="dark">
   <div class="diensten-bg"></div>
@@ -1403,68 +1441,13 @@
   </div>
 </section>
 
-<!-- ============ PHOTO — person at laptop, full-bleed cinematic reveal ============ -->
-<section id="over" class="photo-section" data-section data-theme="dark">
-  <div class="photo-section-bg"></div>
-  <div class="photo-section-overlay"></div>
-  <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-24 w-full">
-    <div class="grid grid-cols-12 gap-6 md:gap-10 items-center">
-      <div class="col-span-12 md:col-span-6 lg:col-span-5">
-        <p class="section-eyebrow mb-4 scroll-reveal">
-          <span class="se-num">03</span>
-          <span class="se-line"></span>
-          <span class="se-label">Wie ben ik</span>
-        </p>
-        <h2 class="font-display text-[32px] sm:text-[48px] md:text-[64px] leading-[0.95] tracking-tight scroll-reveal font-semibold text-cream">
-          Jij onderneemt.<br>
-          <span class="italic-swash" style="color:#E9A76A">Ik regel</span> de rest.
-        </h2>
-        <p class="mt-5 md:mt-8 text-[14px] md:text-[17px] leading-[1.55] text-cream/80 max-w-[48ch] scroll-reveal">
-          Ik ben Job Mentink — boekhouder met een hekel aan onnodig jargon. Persoonlijk contact, vaste prijs, en altijd één aanspreekpunt. Geen doorverwijzingen, geen verrassingen.
-        </p>
-        <div class="mt-6 md:mt-10 flex flex-wrap gap-3 scroll-reveal">
-          <a href="#contact" class="btn-primary">
-            Plan kennismaking
-            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="col-span-12 md:col-span-5 md:col-start-8 lg:col-start-8 scroll-reveal">
-        <div class="grid grid-cols-2 gap-3 md:gap-4">
-          <div class="liquid-glass-dark rounded-[16px] p-4 md:p-6">
-            <p class="font-display num-tab text-[36px] md:text-[48px] font-semibold leading-none" style="color:#E9A76A">€59</p>
-            <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/60 mt-1">Vanaf per maand</p>
-          </div>
-          <div class="liquid-glass-dark rounded-[16px] p-4 md:p-6">
-            <p class="font-display num-tab text-[36px] md:text-[48px] font-semibold leading-none text-cream">1</p>
-            <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/60 mt-1">Vast aanspreekpunt</p>
-          </div>
-          <div class="liquid-glass-dark rounded-[16px] p-4 md:p-6 col-span-2">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-orange/20 flex items-center justify-center shrink-0 ring-1 ring-orange/30">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path d="M4 9.5L7.5 13L14 6" stroke="#1E7A48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <div>
-                <p class="font-display text-[15px] font-semibold text-cream leading-tight">Altijd op tijd ingediend</p>
-                <p class="text-[12px] text-cream/60 mt-0.5">BTW · IB · jaarstukken</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ WERKWIJZE — snap-pane centred, smaller step numerals ============ -->
 <section id="werkwijze" class="bg-forest text-cream relative snap-pane" data-section data-theme="dark">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-20 relative w-full">
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-5 md:mb-14">
       <div class="col-span-12 md:col-span-5">
         <p class="section-eyebrow mb-2 md:mb-4 scroll-reveal">
-          <span class="se-num">04</span>
+          <span class="se-num">03</span>
           <span class="se-line"></span>
           <span class="se-label">Werkwijze</span>
         </p>
@@ -1514,7 +1497,7 @@
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-3 md:mb-12">
       <div class="col-span-12 md:col-span-5">
         <p class="section-eyebrow mb-2 md:mb-3 scroll-reveal">
-          <span class="se-num">05</span>
+          <span class="se-num">04</span>
           <span class="se-line"></span>
           <span class="se-label">Tarieven</span>
         </p>
@@ -1632,7 +1615,7 @@ END HIDDEN-FOR-LATER:testimonial -->
     <div class="grid grid-cols-12 gap-6 md:gap-10">
       <div class="col-span-12 md:col-span-4">
         <p class="section-eyebrow mb-5 scroll-reveal">
-          <span class="se-num">06</span>
+          <span class="se-num">05</span>
           <span class="se-line"></span>
           <span class="se-label">Veelgestelde vragen</span>
         </p>
@@ -1716,7 +1699,7 @@ END HIDDEN-FOR-LATER:testimonial -->
     <div class="relative grid grid-cols-12 gap-4 md:gap-10">
       <div class="col-span-12 md:col-span-8">
         <p class="section-eyebrow mb-3 md:mb-6 scroll-reveal">
-          <span class="se-num">07</span>
+          <span class="se-num">06</span>
           <span class="se-line"></span>
           <span class="se-label">Laten we kennismaken</span>
         </p>
