@@ -1103,7 +1103,6 @@
     /* Hero: stable height that doesn't grow when address bar hides */
     .hero-section {
       height: 100svh;
-      overflow: hidden;
       /* Compensate for notch on iPhone */
       padding-top: calc(env(safe-area-inset-top) + 80px);
     }
@@ -1124,20 +1123,20 @@
       justify-content: space-between;
       align-items: center;
       padding-top: 80px;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
     }
     .foto-section-bg {
       position: absolute;
       inset: 0;
-      background-image: url('assets/cinematic-bg.jpg');
+      background-image: url('assets/job-mentink.jpg');
       background-size: cover;
-      background-position: center 30%;
+      background-position: center 20%;
       z-index: -2;
     }
     .foto-section-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(23,20,15,0.15) 0%, rgba(23,20,15,0.65) 60%, rgba(23,20,15,0.92) 100%);
+      background: linear-gradient(180deg, rgba(23,20,15,0.20) 0%, rgba(23,20,15,0.55) 45%, rgba(23,20,15,0.82) 70%, rgba(23,20,15,0.96) 100%);
       z-index: -1;
     }
     .foto-mockup {
@@ -1260,12 +1259,12 @@
     <div class="blob-wrap blob-wrap-f"><div class="blob-orb blob-orb-f"></div></div>
   </div>
 
-  <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 pt-4 md:pt-12 lg:pt-20 pb-10 md:pb-20 lg:pb-24 w-full">
+  <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 pt-4 md:pt-4 lg:pt-20 pb-10 md:pb-20 lg:pb-24 w-full">
     <div class="grid grid-cols-12 gap-6 md:gap-12 items-center">
 
       <!-- LEFT -->
       <div class="col-span-12 lg:col-span-7">
-        <div class="flex flex-wrap items-center gap-4 mb-5 reveal" style="animation-delay:.05s">
+        <div class="flex flex-wrap items-center gap-4 mb-4 reveal" style="animation-delay:.05s">
           <p class="section-eyebrow">
             <span class="se-num">01</span>
             <span class="se-line"></span>
@@ -1278,13 +1277,13 @@
           <span class="italic-swash">op maat</span> geregeld.
         </h1>
 
-        <div class="mt-6 md:mt-10 grid grid-cols-12 gap-6">
-          <p class="col-span-12 md:col-span-7 text-[15px] md:text-[17px] lg:text-[19px] leading-[1.55] text-ink2 max-w-[56ch] reveal" style="animation-delay:.3s">
+        <div class="mt-4 md:mt-10 grid grid-cols-12 gap-6">
+          <p class="col-span-12 md:col-span-7 text-[14px] md:text-[17px] lg:text-[19px] leading-[1.5] md:leading-[1.55] text-ink2 max-w-[56ch] reveal" style="animation-delay:.3s">
             Als zzp'er wil je <em class="font-display italic text-orange">ondernemen</em>, niet urenlang worstelen met bonnetjes en belastingaangiften. Mentink op Maat neemt jouw administratiezorgen uit handen, persoonlijk, overzichtelijk en precies wat jij nodig hebt.
           </p>
         </div>
 
-        <div class="mt-8 flex flex-wrap gap-3 reveal" style="animation-delay:.45s">
+        <div class="mt-5 md:mt-8 flex flex-wrap gap-3 reveal" style="animation-delay:.45s">
           <a href="#tarieven" class="btn-primary">
             Bekijk tarieven
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1362,6 +1361,11 @@
 <section id="foto" class="foto-section" data-section data-theme="dark">
   <div class="foto-section-bg" style="background-image:url('assets/job-mentink.jpg');background-size:cover;background-position:center 20%;"></div>
   <div class="foto-section-overlay"></div>
+
+  <!-- Top eyebrow — gives the section intentional top content -->
+  <div class="w-full px-6 pt-2 z-10">
+    <p class="foto-eyebrow">Mentink op maat · persoonlijk</p>
+  </div>
 
   <!-- Text at bottom -->
   <div class="foto-section-content">
@@ -1499,7 +1503,7 @@
 
 <!-- ============ PRICING — glassmorphic tabs ============ -->
 <section id="tarieven" class="relative z-10 snap-pane" data-section data-theme="light">
-  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-6 md:py-20 w-full">
+  <div class="max-w-[1400px] mx-auto px-6 md:px-10 py-6 md:py-20 w-full" style="padding-top: max(24px, calc(env(safe-area-inset-top) + 16px))">
     <div class="grid grid-cols-12 gap-3 md:gap-10 mb-3 md:mb-12">
       <div class="col-span-12 md:col-span-5">
         <p class="section-eyebrow mb-2 md:mb-3 scroll-reveal">
