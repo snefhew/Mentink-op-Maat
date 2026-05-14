@@ -1147,7 +1147,39 @@
     #contact  { position: relative; z-index: 7; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: hidden !important; box-shadow: 0 -10px 36px rgba(0,0,0,0.35); }
 
     /* Padding-top compensates for the -28px overlap on each stacked section */
-    #foto, #diensten, #werkwijze, #tarieven, #faq, #contact { padding-top: 40px; }
+    #foto, #diensten, #werkwijze, #tarieven, #faq, #contact { padding-top: 44px; }
+
+    /* ── Pill handle at top of every stacked card ── */
+    #foto::before, #diensten::before, #werkwijze::before,
+    #tarieven::before, #faq::before, #contact::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 4px;
+      border-radius: 99px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    /* Dark sections → white/subtle pill */
+    #foto::before, #diensten::before, #werkwijze::before, #contact::before {
+      background: rgba(255,255,255,0.28);
+    }
+    /* Light sections → dark/subtle pill */
+    #tarieven::before, #faq::before {
+      background: rgba(0,0,0,0.13);
+    }
+
+    /* ── Same-dark fix: diensten gets a green accent top border ── */
+    #diensten {
+      border-top: 2.5px solid rgba(30,122,72,0.55);
+    }
+
+    /* ── Same-cream fix: FAQ gets a warmer tinted background ── */
+    #faq { background: #EDE8DC; }
 
     /* Scroll dots: hide on very small phones to avoid overlap */
     .scroll-dots { right: 2px; }
