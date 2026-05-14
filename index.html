@@ -1104,8 +1104,19 @@
     /* Ensure body text is at least 16px on mobile (WCAG / audit requirement) */
     body { font-size: 16px; }
 
-    /* Mobile: each section fills the screen but can grow taller if needed.
-       Page scrolls as one — no internal per-section overflow. */
+    /* ── Prevent any horizontal scroll ── */
+    html, body { overflow-x: hidden; max-width: 100%; }
+
+    /* ── Kill animated blobs entirely — they're the "moving elements" ── */
+    .gradient-blob { display: none !important; }
+
+    /* ── Kill float cards bobbing animation ── */
+    .float-a, .float-b { animation: none !important; transform: none !important; }
+
+    /* ── Scroll-reveal: no translateY shift on mobile, just opacity ── */
+    .scroll-reveal { transform: none !important; }
+
+    /* ── Mobile: sections fill screen, grow if content needs more ── */
     .snap-pane,
     .diensten-section {
       height: auto !important;
@@ -1122,6 +1133,21 @@
       padding-top: calc(env(safe-area-inset-top) + 80px);
       padding-bottom: 48px;
     }
+
+    /* ══ CARD-STACK SECTION TRANSITIONS ══
+       Each section "slides up" over the previous with rounded top corners.
+       Higher z-index = later sections appear on top as you scroll down. */
+    #hero     { position: relative; z-index: 8; }
+    #foto     { position: relative; z-index: 7; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: hidden !important; box-shadow: 0 -6px 30px rgba(0,0,0,0.22); }
+    #diensten { position: relative; z-index: 6; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: hidden !important; box-shadow: 0 -6px 30px rgba(0,0,0,0.18); }
+    #werkwijze{ position: relative; z-index: 5; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: hidden !important; box-shadow: 0 -6px 30px rgba(0,0,0,0.22); }
+    #tarieven { position: relative; z-index: 4; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: visible !important; box-shadow: 0 -6px 30px rgba(0,0,0,0.12); }
+    #faq      { position: relative; z-index: 3; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: visible !important; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
+    #contact  { position: relative; z-index: 2; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: hidden !important; box-shadow: 0 -8px 32px rgba(0,0,0,0.30); }
+
+    /* Add padding-top to each stacked section so content isn't hidden under the curve */
+    #foto, #diensten, #werkwijze, #tarieven, #faq, #contact { padding-top: 40px; }
+
     /* Scroll dots: hide on very small phones to avoid overlap */
     .scroll-dots { right: 2px; }
   }
