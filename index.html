@@ -1145,6 +1145,21 @@
     #tarieven { position: relative; z-index: 5; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: visible !important; box-shadow: 0 -6px 24px rgba(0,0,0,0.14); }
     #faq      { position: relative; z-index: 6; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: visible !important; box-shadow: 0 -4px 16px rgba(0,0,0,0.08); }
     #contact  { position: relative; z-index: 7; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: hidden !important; box-shadow: 0 -10px 36px rgba(0,0,0,0.35); }
+    #footer   { position: relative; z-index: 8; border-radius: 28px 28px 0 0; margin-top: -28px; overflow: hidden; box-shadow: 0 -8px 28px rgba(0,0,0,0.40); padding-top: 44px; }
+    #footer::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.20);
+      z-index: 10;
+      pointer-events: none;
+    }
 
     /* Padding-top compensates for the -28px overlap on each stacked section */
     #foto, #diensten, #werkwijze, #tarieven, #faq, #contact { padding-top: 44px; }
@@ -2106,7 +2121,7 @@ END HIDDEN-FOR-LATER:testimonial -->
 </main>
 
 <!-- ============ FOOTER ============ -->
-<footer class="bg-ink text-cream/70 border-t border-cream/15 relative" id="footer">
+<footer class="bg-ink text-cream/70 relative" id="footer">
   <!-- Hairline amber accent above the footer — a 1px instrument-shelf line.
        Located at the top edge so it reads as a divider, not chrome. -->
   <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-orange/40 to-transparent" aria-hidden="true"></div>
