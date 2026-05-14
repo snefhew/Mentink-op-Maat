@@ -932,6 +932,10 @@
     object-position: center;
     display: inline-block;
   }
+  @media (max-width: 767px) {
+    .logo-mark { width: 36px; height: 36px; }
+    .site-header .font-display { font-size: 16px !important; }
+  }
 
   /* ---------- SCROLL DOTS (compact pill, no text) ----------
      Fixed-width pill so the layout never shifts. Each dot scales slightly
@@ -1138,7 +1142,7 @@
       inset: 0;
       background-image: url('assets/job-mentink.jpg');
       background-size: cover;
-      background-position: center 20%;
+      background-position: 55% 12%;
       z-index: -2;
     }
     .foto-section-overlay {
@@ -1382,7 +1386,7 @@
 
     <div class="flex items-center gap-3">
       <a href="tel:+31628215898" class="hidden md:inline text-[14px] font-mono tracking-wide text-ink2">06&nbsp;2821&nbsp;5898</a>
-      <a href="#contact" class="btn-primary text-[14px]">
+      <a href="#contact" class="btn-primary text-[14px] hidden md:inline-flex">
         Start gesprek
         <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -1535,7 +1539,7 @@
 
 <!-- ============ FOTO — mobile-only full-screen photo section ============ -->
 <section id="foto" class="foto-section" data-section data-theme="dark">
-  <div class="foto-section-bg" style="background-image:url('assets/job-mentink.jpg');background-size:cover;background-position:center 20%;"></div>
+  <div class="foto-section-bg" style="background-image:url('assets/job-mentink.jpg');background-size:cover;background-position:55% 12%;"></div>
   <div class="foto-section-overlay"></div>
 
   <!-- Top eyebrow — gives the section intentional top content -->
