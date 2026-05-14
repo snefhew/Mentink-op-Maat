@@ -1104,18 +1104,23 @@
     /* Ensure body text is at least 16px on mobile (WCAG / audit requirement) */
     body { font-size: 16px; }
 
-    /* Mobile: completely natural height — no snap, no forced viewport heights.
-       All sections just stack and the page scrolls as one normal document. */
+    /* Mobile: each section fills the screen but can grow taller if needed.
+       Page scrolls as one — no internal per-section overflow. */
     .snap-pane,
-    .hero-section,
     .diensten-section {
       height: auto !important;
-      min-height: 0 !important;
+      min-height: 100svh !important;
       overflow: visible !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .hero-section {
+      height: auto !important;
+      min-height: 100svh !important;
+      overflow: hidden !important;
       padding-top: calc(env(safe-area-inset-top) + 80px);
-      padding-bottom: 60px;
+      padding-bottom: 48px;
     }
     /* Scroll dots: hide on very small phones to avoid overlap */
     .scroll-dots { right: 2px; }
@@ -1125,15 +1130,16 @@
   @media (max-width: 767px) {
     .foto-section {
       position: relative;
-      height: 85vw;
-      max-height: 520px;
-      min-height: 340px;
+      min-height: 100svh;
+      height: auto;
       overflow: hidden;
       isolation: isolate;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
+      padding-top: 80px;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
     }
     .foto-section-bg {
       position: absolute;
