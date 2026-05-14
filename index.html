@@ -1107,6 +1107,19 @@
     /* ── Prevent any horizontal scroll ── */
     html, body { overflow-x: hidden; max-width: 100%; }
 
+    /* ── Header: mini card style at top ── */
+    .site-header {
+      position: fixed !important;
+      background: rgba(254,253,249,0.82) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border-radius: 0 0 20px 20px !important;
+      box-shadow: 0 2px 16px rgba(23,20,15,0.10), 0 1px 0 rgba(23,20,15,0.06) !important;
+      left: 6px !important;
+      right: 6px !important;
+      top: 0 !important;
+    }
+
     /* ── Blobs: visible but frozen (no animation) ── */
     .blob-wrap { animation: none !important; }
     .blob-orb  { animation: none !important; }
@@ -1131,7 +1144,7 @@
       height: auto !important;
       min-height: 100svh !important;
       overflow: hidden !important;
-      padding-top: calc(env(safe-area-inset-top) + 80px);
+      padding-top: calc(env(safe-area-inset-top) + 88px);
       padding-bottom: 48px;
     }
 
