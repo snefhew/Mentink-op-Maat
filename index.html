@@ -1104,20 +1104,18 @@
     /* Ensure body text is at least 16px on mobile (WCAG / audit requirement) */
     body { font-size: 16px; }
 
-    /* Mobile: sections stack naturally, no forced height or internal scroll.
-       Fighting scroll containers cause the jitter; let the page scroll as one. */
-    .snap-pane {
-      height: auto;
-      min-height: 100svh;
-      overflow: visible;
+    /* Mobile: completely natural height — no snap, no forced viewport heights.
+       All sections just stack and the page scrolls as one normal document. */
+    .snap-pane,
+    .hero-section,
+    .diensten-section {
+      height: auto !important;
+      min-height: 0 !important;
+      overflow: visible !important;
     }
-    /* Hero: still full-height on mobile */
     .hero-section {
-      height: 100svh;
-      min-height: 100svh;
-      overflow: hidden;
-      /* Compensate for notch on iPhone */
       padding-top: calc(env(safe-area-inset-top) + 80px);
+      padding-bottom: 60px;
     }
     /* Scroll dots: hide on very small phones to avoid overlap */
     .scroll-dots { right: 2px; }
@@ -1127,16 +1125,15 @@
   @media (max-width: 767px) {
     .foto-section {
       position: relative;
-      height: 100svh;
-      overflow-x: clip;
-      overflow-y: hidden;
+      height: 85vw;
+      max-height: 520px;
+      min-height: 340px;
+      overflow: hidden;
       isolation: isolate;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      padding-top: 80px;
-      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
     }
     .foto-section-bg {
       position: absolute;
@@ -1188,10 +1185,12 @@
     .foto-section { display: none !important; }
   }
 
-  /* Safari -webkit-fill-available fallback for dvh */
-  @supports not (min-height: 100dvh) {
-    .hero-section, .snap-pane, .diensten-section {
-      min-height: -webkit-fill-available;
+  /* Safari -webkit-fill-available fallback for dvh — desktop only */
+  @media (min-width: 768px) {
+    @supports not (min-height: 100dvh) {
+      .hero-section, .snap-pane, .diensten-section {
+        min-height: -webkit-fill-available;
+      }
     }
   }
 
