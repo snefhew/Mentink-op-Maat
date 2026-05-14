@@ -1104,17 +1104,18 @@
     /* Ensure body text is at least 16px on mobile (WCAG / audit requirement) */
     body { font-size: 16px; }
 
-    /* Lock snap sections to exactly one screen height on mobile */
+    /* Mobile: sections stack naturally, no forced height or internal scroll.
+       Fighting scroll containers cause the jitter; let the page scroll as one. */
     .snap-pane {
-      height: 100svh;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
+      height: auto;
+      min-height: 100svh;
+      overflow: visible;
     }
-    /* Hero: stable height that doesn't grow when address bar hides */
+    /* Hero: still full-height on mobile */
     .hero-section {
       height: 100svh;
+      min-height: 100svh;
+      overflow: hidden;
       /* Compensate for notch on iPhone */
       padding-top: calc(env(safe-area-inset-top) + 80px);
     }
@@ -1539,7 +1540,7 @@
 
 <!-- ============ FOTO — mobile-only full-screen photo section ============ -->
 <section id="foto" class="foto-section" data-section data-theme="dark">
-  <div class="foto-section-bg" style="background-image:url('assets/job-mentink.jpg');background-size:cover;background-position:55% 12%;"></div>
+  <div class="foto-section-bg" style="background-image:url('assets/job-mentink.jpg');background-size:cover;background-position:42% 12%;"></div>
   <div class="foto-section-overlay"></div>
 
   <!-- Top eyebrow — gives the section intentional top content -->
@@ -2118,6 +2119,11 @@ END HIDDEN-FOR-LATER:testimonial -->
   // correct dvh handling. Anchor clicks use scrollIntoView.
   // ----------------------------------------------------------------
   if (isTouch) {
+    // Always prevent browser from restoring mid-page scroll position
+    history.scrollRestoration = 'manual';
+    // Scroll back to top on load (prevents tarieven etc appearing pre-scrolled)
+    window.scrollTo(0, 0);
+
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const id = a.getAttribute('href');
@@ -2125,13 +2131,11 @@ END HIDDEN-FOR-LATER:testimonial -->
         const target = document.querySelector(id);
         if (!target) return;
         e.preventDefault();
-        target.scrollTop = 0;
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
     if (location.hash && document.querySelector(location.hash)) {
-      history.scrollRestoration = 'manual';
       requestAnimationFrame(() => {
         document.querySelector(location.hash)
           .scrollIntoView({ behavior: 'instant', block: 'start' });
