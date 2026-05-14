@@ -1260,46 +1260,107 @@
     }
   }
 
-  /* ---------- MOBILE NAV (hamburger) ---------- */
+  /* ---------- HAMBURGER BUTTON ---------- */
+  #menu-open {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(23,20,15,0.14) !important;
+    background: rgba(254,253,249,0.72) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+    gap: 4px !important;
+  }
+  #menu-open span {
+    width: 14px !important;
+    height: 1.5px !important;
+    background: var(--c-ink) !important;
+    border-radius: 2px !important;
+    display: block !important;
+  }
+
+  /* ---------- MOBILE MENU OVERLAY ---------- */
   #mobile-menu {
     display: none;
     position: fixed;
     inset: 0;
     z-index: 50;
-    background: var(--c-ink);
+    /* Frosted glass panel effect */
+    background: rgba(23,20,15,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
   }
-  #mobile-menu.is-open {
+  #mobile-menu.is-open { display: flex; }
+
+  /* Top bar inside menu */
+  #mobile-menu::before {
+    content: 'Menu';
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(254,253,249,0.35);
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  /* Nav links */
+  #mobile-menu nav {
     display: flex;
+    flex-direction: column;
+    padding: 12px 20px;
+    gap: 4px;
+    flex: 1;
   }
   #mobile-menu a {
     font-family: 'Inter Tight', system-ui, sans-serif;
-    font-size: 32px;
-    font-weight: 600;
-    letter-spacing: -0.04em;
-    color: var(--c-cream);
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: rgba(254,253,249,0.75);
     text-decoration: none;
-    padding: 10px 24px;
-    border-radius: 8px;
-    transition: color var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out);
+    padding: 13px 16px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
   }
-  #mobile-menu a:hover {
-    color: var(--c-orange);
+  #mobile-menu a:active {
+    background: rgba(255,255,255,0.06);
   }
+
+  /* Contact link — green CTA style */
+  #mobile-menu a#mmlink-contact {
+    margin-top: 8px;
+    background: var(--c-orange);
+    color: #fff;
+    font-weight: 600;
+    border-color: transparent;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(30,122,72,0.30);
+  }
+  #mobile-menu a#mmlink-contact:active {
+    background: var(--c-orangeDeep);
+  }
+
+  /* Close button */
   #mobile-close {
     position: absolute;
-    top: 20px;
+    top: calc(env(safe-area-inset-top, 0px) + 14px);
     right: 20px;
-    width: 44px; height: 44px;
+    width: 32px; height: 32px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(251,249,242,0.10);
-    border: 1px solid rgba(255,255,255,0.20);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 8px;
-    color: var(--c-cream);
-    font-size: 22px;
+    color: rgba(254,253,249,0.6);
+    font-size: 16px;
     cursor: pointer;
     line-height: 1;
   }
@@ -1457,10 +1518,10 @@
         <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <!-- Hamburger — mobile only -->
-      <button id="menu-open" class="md:hidden flex flex-col justify-center items-center gap-[5px] w-10 h-10 rounded-lg border border-ink/20 bg-cream/60 backdrop-blur" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-menu">
-        <span class="block w-5 h-[1.5px] bg-ink"></span>
-        <span class="block w-5 h-[1.5px] bg-ink"></span>
-        <span class="block w-5 h-[1.5px] bg-ink"></span>
+      <button id="menu-open" class="md:hidden flex flex-col justify-center items-center" aria-label="Menu openen" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
   </div>
