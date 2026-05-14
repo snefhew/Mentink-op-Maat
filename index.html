@@ -1164,22 +1164,22 @@
       z-index: 10;
       pointer-events: none;
     }
-    /* Dark sections → white/subtle pill */
+    /* Dark sections → clean white pill */
     #foto::before, #diensten::before, #werkwijze::before, #contact::before {
-      background: rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.40);
     }
-    /* Light sections → dark/subtle pill */
+    /* Light sections → subtle gray pill */
     #tarieven::before, #faq::before {
-      background: rgba(0,0,0,0.13);
-    }
-
-    /* ── Same-dark fix: diensten gets a green accent top border ── */
-    #diensten {
-      border-top: 2.5px solid rgba(30,122,72,0.55);
+      background: rgba(0,0,0,0.10);
     }
 
     /* ── Same-cream fix: FAQ gets a warmer tinted background ── */
     #faq { background: #EDE8DC; }
+
+    /* ── Prevent stacked card from overlapping bottom content ── */
+    #tarieven { padding-bottom: 52px; }
+    #werkwijze { padding-bottom: 40px; }
+    #diensten  { padding-bottom: 40px; }
 
     /* Scroll dots: hide on very small phones to avoid overlap */
     .scroll-dots { right: 2px; }
